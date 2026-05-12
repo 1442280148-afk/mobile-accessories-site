@@ -1,585 +1,441 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>Guangzhou XiQi Technology - Mobile Accessories Manufacturer</title>
+  <meta charset="UTF-8" />
 
-  <link rel="stylesheet" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>Guangzhou XiQi Technology</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+
 </head>
 
 <body>
 
-<!-- HEADER -->
+  <!-- HEADER -->
 
-<header class="header">
+  <header class="header">
 
-  <div class="logo">
+    <div class="logo">
 
-    <img src="logo.png" alt="XiQi Logo">
+      <img src="logo.png" alt="XiQi Logo" />
 
-    <div class="logo-text">
-      Guangzhou XiQi Technology
+      <div class="logo-text">
+
+        Guangzhou XiQi Technology
+
+      </div>
+
     </div>
 
-  </div>
+    <nav class="nav">
 
-  <nav class="nav" id="nav">
+      <a href="#home">Home</a>
 
-    <a href="#home">Home</a>
+      <a href="#products">Products</a>
 
-    <a href="#products">Products</a>
+      <a href="#about">About</a>
 
-    <a href="#oem">OEM & ODM</a>
+      <a href="#oem">OEM & ODM</a>
 
-    <a href="#factory">Factory</a>
+      <a href="#contact">Contact</a>
 
-    <a href="#about">About Us</a>
+    </nav>
 
-    <a href="#contact">Contact Us</a>
+  </header>
 
-  </nav>
+  <!-- HERO -->
 
-  <div class="menu-btn" onclick="toggleMenu()">
-    ☰
-  </div>
+  <section class="hero" id="home">
 
-</header>
+    <!-- VIDEO -->
 
-<!-- HERO -->
+    <video autoplay muted loop playsinline class="hero-video">
 
-<section class="hero" id="home">
+      <source src="hero-video.mp4" type="video/mp4">
 
-  <!-- VIDEO -->
+    </video>
 
-  <video class="hero-video" autoplay muted loop playsinline>
+    <!-- OVERLAY -->
 
-    <source src="hero-video.mp4" type="video/mp4">
+    <div class="hero-overlay"></div>
 
-  </video>
+    <!-- CONTENT -->
 
-  <!-- HERO CONTENT -->
+    <div class="hero-content">
 
-  <div class="hero-content">
+      <p class="small-title">
 
-    <p class="small-title">
-      PROFESSIONAL MOBILE ACCESSORIES SUPPLIER
-    </p>
+        PROFESSIONAL MOBILE ACCESSORIES SUPPLIER
 
-    <h1>
-      OEM & Wholesale<br>
-      Mobile Accessories<br>
-      Manufacturer
-    </h1>
+      </p>
 
-    <p class="hero-desc">
+      <h1>
 
-      Guangzhou XiQi Technology provides high-quality mobile accessories
-      including phone cases, chargers, screen protectors, power banks,
-      earbuds and more for global distributors.
+        OEM & Wholesale<br>
 
-    </p>
+        Mobile Accessories<br>
 
-    <div class="hero-buttons">
+        Manufacturer
 
-      <a href="#products" class="btn primary">
-        View Products
-      </a>
+      </h1>
 
-      <a
-      href="https://wa.me/8617817004592?text=Hello%20XiQi%20Technology%2C%20I%20am%20interested%20in%20your%20mobile%20accessories."
+      <p class="hero-desc">
+
+        Guangzhou XiQi Technology provides premium mobile accessories
+
+        including chargers, phone cases, screen protectors,
+
+        power banks, earbuds and more for global distributors.
+
+      </p>
+
+      <div class="hero-buttons">
+
+        <a href="#products" class="btn primary">
+
+          View Products
+
+        </a>
+
+        <a
+
+          href="https://wa.me/8617817004592"
+
+          target="_blank"
+
+          class="btn secondary">
+
+          WhatsApp Us
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- PRODUCTS -->
+
+  <section class="section" id="products">
+
+    <div class="section-top">
+
+      <p>OUR PRODUCTS</p>
+
+      <h2>Our Main Products</h2>
+
+    </div>
+
+    <div class="category-slider">
+
+      <div class="category-grid">
+
+        <!-- CARD -->
+
+        <div class="category-card">
+
+          <img src="https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&w=800&q=80">
+
+          <div class="category-info">
+
+            <h3>Phone Cases</h3>
+
+            <p>
+
+              Shockproof, magnetic and stylish protective phone cases.
+
+            </p>
+
+            <a href="product.html" class="product-link">
+
+              View Details
+
+            </a>
+
+          </div>
+
+        </div>
+
+        <!-- CARD -->
+
+        <div class="category-card">
+
+          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80">
+
+          <div class="category-info">
+
+            <h3>Chargers</h3>
+
+            <p>
+
+              Fast charging wall chargers and wireless chargers.
+
+            </p>
+
+            <a href="product.html" class="product-link">
+
+              View Details
+
+            </a>
+
+          </div>
+
+        </div>
+
+        <!-- CARD -->
+
+        <div class="category-card">
+
+          <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=800&q=80">
+
+          <div class="category-info">
+
+            <h3>Screen Protectors</h3>
+
+            <p>
+
+              HD tempered glass and privacy screen protectors.
+
+            </p>
+
+            <a href="product.html" class="product-link">
+
+              View Details
+
+            </a>
+
+          </div>
+
+        </div>
+
+        <!-- CARD -->
+
+        <div class="category-card">
+
+          <img src="https://images.unsplash.com/photo-1587033411391-5d9e51cce126?auto=format&fit=crop&w=800&q=80">
+
+          <div class="category-info">
+
+            <h3>Power Banks</h3>
+
+            <p>
+
+              Portable high-capacity fast charging power banks.
+
+            </p>
+
+            <a href="product.html" class="product-link">
+
+              View Details
+
+            </a>
+
+          </div>
+
+        </div>
+
+        <!-- CARD -->
+
+        <div class="category-card">
+
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80">
+
+          <div class="category-info">
+
+            <h3>Wireless Earbuds</h3>
+
+            <p>
+
+              Bluetooth earbuds with premium audio quality.
+
+            </p>
+
+            <a href="product.html" class="product-link">
+
+              View Details
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ABOUT -->
+
+  <section class="about-section" id="about">
+
+    <div class="about-left">
+
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80">
+
+    </div>
+
+    <div class="about-right">
+
+      <p class="blue-text">ABOUT XIQI</p>
+
+      <h2>
+
+        Professional Mobile Accessories Manufacturer
+
+      </h2>
+
+      <p class="about-desc">
+
+        XiQi Technology focuses on OEM & ODM mobile accessories production.
+
+        We provide reliable quality, stable delivery and global wholesale service.
+
+      </p>
+
+      <div class="about-boxes">
+
+        <div class="mini-box">
+
+          <h3>10+</h3>
+
+          <p>Years Experience</p>
+
+        </div>
+
+        <div class="mini-box">
+
+          <h3>80+</h3>
+
+          <p>Countries Served</p>
+
+        </div>
+
+        <div class="mini-box">
+
+          <h3>500+</h3>
+
+          <p>Global Clients</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- OEM -->
+
+  <section class="oem-section" id="oem">
+
+    <div class="oem-left">
+
+      <p class="blue-text">OEM & ODM</p>
+
+      <h2>
+
+        Build Your Brand With XiQi
+
+      </h2>
+
+      <p>
+
+        We support logo customization, packaging design,
+
+        OEM manufacturing and wholesale solutions.
+
+      </p>
+
+      <a href="https://wa.me/8617817004592"
+
       target="_blank"
-      class="btn secondary">
 
-      WhatsApp Us
+      class="btn primary">
+
+      Start OEM Project
 
       </a>
 
     </div>
-
-  </div>
-
-</section>
-
-<!-- PRODUCTS -->
-
-<section class="section reveal" id="products">
-
-  <div class="section-top">
-
-    <p>PRODUCT CATEGORY</p>
-
-    <h2>
-      Our Main Products
-    </h2>
-
-  </div>
-
-  <div class="category-slider">
-
-    <div class="category-grid">
-
-      <!-- PRODUCT 1 -->
-
-      <div class="category-card">
-
-        <img src="phonecase.jpg">
-
-        <div class="category-info">
-
-          <h3>Phone Cases</h3>
-
-          <p>
-            Premium magnetic shockproof phone cases with OEM logo support.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-      <!-- PRODUCT 2 -->
-
-      <div class="category-card">
-
-        <img src="charger.jpg">
-
-        <div class="category-info">
-
-          <h3>Chargers</h3>
-
-          <p>
-            Fast charging wall chargers and wireless charging accessories.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-      <!-- PRODUCT 3 -->
-
-      <div class="category-card">
-
-        <img src="screen.jpg">
-
-        <div class="category-info">
-
-          <h3>Screen Protectors</h3>
-
-          <p>
-            HD tempered glass and privacy screen protectors.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-      <!-- PRODUCT 4 -->
-
-      <div class="category-card">
-
-        <img src="powerbank.jpg">
-
-        <div class="category-info">
-
-          <h3>Power Banks</h3>
-
-          <p>
-            Portable high-capacity fast charging power banks.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-      <!-- PRODUCT 5 -->
-
-      <div class="category-card">
-
-        <img src="earbuds.jpg">
-
-        <div class="category-info">
-
-          <h3>Earbuds</h3>
-
-          <p>
-            Wireless bluetooth earbuds with premium sound quality.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-      <!-- PRODUCT 6 -->
-
-      <div class="category-card">
-
-        <img src="cable.jpg">
-
-        <div class="category-info">
-
-          <h3>Data Cables</h3>
-
-          <p>
-            Durable USB-C and Lightning fast charging cables.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-      <!-- DUPLICATE FOR LOOP -->
-
-      <div class="category-card">
-
-        <img src="phonecase.jpg">
-
-        <div class="category-info">
-
-          <h3>Phone Cases</h3>
-
-          <p>
-            Premium magnetic shockproof phone cases with OEM logo support.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-      <div class="category-card">
-
-        <img src="charger.jpg">
-
-        <div class="category-info">
-
-          <h3>Chargers</h3>
-
-          <p>
-            Fast charging wall chargers and wireless charging accessories.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-      <div class="category-card">
-
-        <img src="screen.jpg">
-
-        <div class="category-info">
-
-          <h3>Screen Protectors</h3>
-
-          <p>
-            HD tempered glass and privacy screen protectors.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-      <div class="category-card">
-
-        <img src="powerbank.jpg">
-
-        <div class="category-info">
-
-          <h3>Power Banks</h3>
-
-          <p>
-            Portable high-capacity fast charging power banks.
-          </p>
-
-          <a href="product.html" class="product-link">
-            View Details
-          </a>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ABOUT -->
-
-<section class="about-section reveal" id="about">
-
-  <div class="about-left">
-
-    <img src="factory.jpg">
-
-  </div>
-
-  <div class="about-right">
-
-    <p class="blue-text">
-      ABOUT OUR COMPANY
-    </p>
-
-    <h2>
-      Professional Mobile Accessories Supplier In China
-    </h2>
-
-    <p class="about-desc">
-
-      Guangzhou XiQi Technology is a professional OEM and ODM mobile accessories manufacturer focused on
-      phone cases, chargers, screen protectors, power banks and electronic accessories.
-
-    </p>
-
-    <div class="about-boxes">
-
-      <div class="mini-box">
-
-        <h3>10+</h3>
-
-        <p>Years Experience</p>
-
-      </div>
-
-      <div class="mini-box">
-
-        <h3>100+</h3>
-
-        <p>Global Clients</p>
-
-      </div>
-
-      <div class="mini-box">
-
-        <h3>500+</h3>
-
-        <p>Products</p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- WHY -->
-
-<section class="why-section reveal" id="factory">
-
-  <div class="section-top white">
-
-    <p>WHY CHOOSE US</p>
-
-    <h2>
-      Reliable Mobile Accessories Manufacturer
-    </h2>
-
-  </div>
-
-  <div class="why-grid">
-
-    <div class="why-card">
-
-      <h3>Factory Direct</h3>
-
-      <p>
-        Competitive wholesale prices and stable supply chain.
-      </p>
-
-    </div>
-
-    <div class="why-card">
-
-      <h3>OEM / ODM Service</h3>
-
-      <p>
-        Support logo, packaging and product customization.
-      </p>
-
-    </div>
-
-    <div class="why-card">
-
-      <h3>Quality Control</h3>
-
-      <p>
-        Strict inspection system before shipment.
-      </p>
-
-    </div>
-
-    <div class="why-card">
-
-      <h3>Global Shipping</h3>
-
-      <p>
-        Fast worldwide delivery and export experience.
-      </p>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- OEM -->
-
-<section class="oem-section reveal" id="oem">
-
-  <div class="oem-left">
-
-    <p class="blue-text">
-      OEM & ODM SERVICE
-    </p>
-
-    <h2>
-      Build Your Own Mobile Accessories Brand
-    </h2>
-
-    <p>
-
-      Guangzhou XiQi Technology provides complete OEM and ODM solutions including logo printing,
-      packaging customization and mass production.
-
-    </p>
-
-    <a
-    href="https://wa.me/8617817004592?text=Hello%20XiQi%20Technology%2C%20I%20want%20OEM%20quotation."
-    target="_blank"
-    class="btn primary">
-
-    Get OEM Quote
-
-    </a>
-
-  </div>
-
-  <div class="oem-right">
 
     <div class="oem-box">
 
-      <h3>
-        Customization Service
-      </h3>
+      <h3>OEM Services</h3>
 
       <ul>
 
-        <li>✔ Custom Logo</li>
+        <li>✔ Logo Printing</li>
 
-        <li>✔ Product Packaging</li>
+        <li>✔ Packaging Customization</li>
 
-        <li>✔ Color Customization</li>
+        <li>✔ Product Design</li>
 
-        <li>✔ OEM Production</li>
+        <li>✔ Global Shipping</li>
 
-        <li>✔ Bulk Wholesale</li>
+        <li>✔ Factory Direct Pricing</li>
 
       </ul>
 
     </div>
 
-  </div>
+  </section>
 
-</section>
+  <!-- CONTACT -->
 
-<!-- CONTACT -->
+  <section class="contact-section" id="contact">
 
-<section class="contact-section reveal" id="contact">
+    <div class="contact-left">
 
-  <div class="contact-left">
+      <p class="blue-text">CONTACT US</p>
 
-    <p class="blue-text">
-      CONTACT US
-    </p>
+      <h2>
 
-    <h2>
-      Contact XiQi Technology
-    </h2>
+        Send Your Inquiry
 
-    <form>
+      </h2>
 
-      <input type="text" placeholder="Your Name">
+      <form>
 
-      <input type="email" placeholder="Email Address">
+        <input type="text" placeholder="Your Name">
 
-      <textarea placeholder="Tell us what products you need"></textarea>
+        <input type="email" placeholder="Your Email">
 
-      <button type="button">
-        Send Message
-      </button>
+        <textarea placeholder="Your Message"></textarea>
 
-    </form>
+        <button type="submit">
 
-  </div>
+          Send Inquiry
 
-  <div class="contact-right">
+        </button>
+
+      </form>
+
+    </div>
 
     <div class="contact-card">
 
-      <h3>
-        Contact Information
-      </h3>
+      <h3>Contact Information</h3>
 
       <p>
 
-        <strong>Email:</strong><br>
-
-        1442280148@qq.com
+        WhatsApp: +8617817004592
 
       </p>
 
       <p>
 
-        <strong>WhatsApp:</strong><br>
-
-        +86 17817004592
+        Email: sales@xiqitech.com
 
       </p>
 
       <p>
-
-        <strong>Address:</strong><br>
 
         Guangzhou, China
 
@@ -587,57 +443,50 @@
 
     </div>
 
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+
+    <div class="footer-logo">
+
+      Guangzhou XiQi Technology
+
+    </div>
+
+    <p>
+
+      © 2026 XiQi Technology. All Rights Reserved.
+
+    </p>
+
+  </footer>
+
+  <!-- WHATSAPP -->
+
+  <div class="whatsapp-container">
+
+    <div class="whatsapp-tooltip">
+
+      Need Help?
+
+    </div>
+
+    <a
+
+      href="https://wa.me/8617817004592"
+
+      class="whatsapp"
+
+      target="_blank">
+
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
+
+    </a>
+
   </div>
-
-</section>
-
-<!-- FOOTER -->
-
-<footer class="footer">
-
-  <div class="footer-logo">
-
-    Guangzhou XiQi Technology
-
-  </div>
-
-  <p>
-    Professional Mobile Accessories OEM Manufacturer
-  </p>
-
-  <p>
-
-    © 2026 Guangzhou XiQi Technology. All Rights Reserved.
-
-  </p>
-
-</footer>
-
-<!-- WHATSAPP -->
-
-<div class="whatsapp-container">
-
-  <div class="whatsapp-tooltip">
-
-    Need Help?<br>
-
-    Chat With Us
-
-  </div>
-
-  <a class="whatsapp"
-
-  href="https://wa.me/8617817004592?text=Hello%20XiQi%20Technology"
-
-  target="_blank">
-
-  <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
-
-  </a>
-
-</div>
-
-<script src="script.js"></script>
 
 </body>
+
 </html>
