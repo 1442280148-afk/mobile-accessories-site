@@ -1,35 +1,33 @@
-function toggleMenu() {
+function toggleMenu(){
+
   document.getElementById("nav").classList.toggle("active");
+
 }
 
-window.addEventListener("scroll", function () {
-  const header = document.querySelector(".header");
+/* SCROLL REVEAL */
 
-  if (window.scrollY > 60) {
-    header.classList.add("scrolled");
-  } else {
-    header.classList.remove("scrolled");
-  }
-});
+window.addEventListener("scroll", reveal);
 
-const revealElements = document.querySelectorAll(
-  ".section, .about-section, .why-section, .oem-section, .contact-section"
-);
+function reveal(){
 
-revealElements.forEach((el) => {
-  el.classList.add("reveal");
-});
+  let reveals = document.querySelectorAll(".reveal");
 
-function revealOnScroll() {
-  revealElements.forEach((el) => {
-    const windowHeight = window.innerHeight;
-    const elementTop = el.getBoundingClientRect().top;
+  for(let i = 0; i < reveals.length; i++){
 
-    if (elementTop < windowHeight - 120) {
-      el.classList.add("active");
+    let windowHeight = window.innerHeight;
+
+    let revealTop = reveals[i].getBoundingClientRect().top;
+
+    let revealPoint = 100;
+
+    if(revealTop < windowHeight - revealPoint){
+
+      reveals[i].classList.add("active");
+
     }
-  });
+
+  }
+
 }
 
-window.addEventListener("scroll", revealOnScroll);
-window.addEventListener("load", revealOnScroll);
+reveal();
