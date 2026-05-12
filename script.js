@@ -31,3 +31,23 @@ function reveal(){
 }
 
 reveal();
+const slider = document.querySelector(".category-grid");
+
+let scrollAmount = 0;
+
+function autoSlide() {
+
+  scrollAmount += 1;
+
+  if (scrollAmount >= slider.scrollWidth - slider.clientWidth) {
+    scrollAmount = 0;
+  }
+
+  slider.scrollTo({
+    left: scrollAmount,
+    behavior: "smooth"
+  });
+
+}
+
+setInterval(autoSlide, 30);
