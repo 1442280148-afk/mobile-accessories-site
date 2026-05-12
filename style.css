@@ -61,6 +61,8 @@ body{
   white-space:nowrap;
 }
 
+/* NAVBAR */
+
 .nav{
   display:flex;
   align-items:center;
@@ -68,15 +70,46 @@ body{
 }
 
 .nav a{
+  position:relative;
+
   color:#ffffff;
+
   text-decoration:none;
+
   font-weight:700;
+
   font-size:15px;
-  transition:0.3s;
+
+  padding:8px 0;
+
+  transition:0.35s ease;
+}
+
+.nav a::after{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  bottom:-4px;
+
+  width:0;
+  height:2px;
+
+  background:linear-gradient(90deg,#38bdf8,#60a5fa);
+
+  border-radius:999px;
+
+  transition:0.35s ease;
 }
 
 .nav a:hover{
-  color:#38bdf8;
+  color:#7dd3fc;
+}
+
+.nav a:hover::after{
+  width:100%;
 }
 
 .menu-btn{
@@ -350,36 +383,89 @@ body{
   border-radius:20px;
 }
 
+/* PRODUCT CARD */
+
 .category-card{
+
   min-width:285px;
   max-width:285px;
-  background:rgba(255,255,255,0.95);
-  border-radius:26px;
+
+  background:rgba(255,255,255,0.96);
+
+  border-radius:28px;
+
   overflow:hidden;
-  box-shadow:0 22px 45px rgba(15,23,42,0.1);
-  border:1px solid rgba(255,255,255,0.85);
+
+  position:relative;
+
+  box-shadow:
+  0 20px 45px rgba(15,23,42,0.08);
+
+  border:1px solid rgba(255,255,255,0.9);
+
   scroll-snap-align:start;
-  transition:0.4s ease;
+
+  transition:0.45s ease;
+
+  transform-style:preserve-3d;
+}
+
+.category-card::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+  linear-gradient(
+  135deg,
+  rgba(56,189,248,0.08),
+  transparent 45%
+  );
+
+  opacity:0;
+
+  transition:0.45s ease;
+
+  pointer-events:none;
+}
+
+.category-card:hover::before{
+  opacity:1;
 }
 
 .category-card:hover{
+
   transform:
-  translateY(-12px)
-  rotateX(3deg);
+  translateY(-14px)
+  rotateX(4deg)
+  rotateY(-3deg);
 
   box-shadow:
-  0 35px 80px rgba(29,155,240,0.25);
+  0 40px 90px rgba(29,155,240,0.22);
+
 }
 
 .category-card img{
+
   width:100%;
+
   height:230px;
+
   object-fit:cover;
-  transition:0.45s ease;
+
+  transition:
+  transform 0.6s ease,
+  filter 0.4s ease;
 }
 
 .category-card:hover img{
-  transform:scale(1.08);
+
+  transform:scale(1.1);
+
+  filter:brightness(1.05);
 }
 
 .category-info{
