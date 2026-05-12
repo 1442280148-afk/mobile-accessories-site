@@ -1,0 +1,160 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  overflow-x:hidden;
+  background:#f5f7fb;
+}
+
+/* HEADER */
+
+.header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:86px;
+  padding:0 6%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(10,20,40,0.45);
+  backdrop-filter:blur(10px);
+  z-index:9999;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.logo img{
+  width:58px;
+  height:58px;
+  border-radius:10px;
+  background:white;
+  padding:5px;
+}
+
+.logo-text{
+  color:white;
+  font-size:20px;
+  font-weight:800;
+}
+
+.nav{
+  display:flex;
+  gap:28px;
+}
+
+.nav a{
+  color:white;
+  text-decoration:none;
+  font-weight:700;
+}
+
+/* HERO */
+
+.hero{
+  position:relative;
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  padding:140px 7%;
+  background:black;
+}
+
+/* VIDEO */
+
+.hero-video{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:1;
+}
+
+/* OVERLAY */
+
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  z-index:2;
+}
+
+/* CONTENT */
+
+.hero-content{
+  position:relative;
+  z-index:3;
+  max-width:760px;
+}
+
+.small-title{
+  color:#38bdf8;
+  font-size:14px;
+  letter-spacing:2px;
+  margin-bottom:20px;
+  font-weight:800;
+}
+
+.hero h1{
+  color:white;
+  font-size:76px;
+  line-height:1.05;
+  font-weight:900;
+  margin-bottom:30px;
+}
+
+.hero-desc{
+  color:#dbeafe;
+  font-size:20px;
+  line-height:1.8;
+  margin-bottom:36px;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:18px;
+}
+
+.btn{
+  height:58px;
+  padding:0 34px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  font-weight:800;
+}
+
+.primary{
+  background:linear-gradient(135deg,#1d9bf0,#006cff);
+  color:white;
+}
+
+.secondary{
+  border:1px solid rgba(255,255,255,0.45);
+  color:white;
+}
+
+/* PRODUCTS */
+
+.products{
+  padding:100px 7%;
+}
+
+.products h2{
+  font-size:48px;
+}
