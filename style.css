@@ -49,13 +49,13 @@ body{
   object-fit:contain;
   background:white;
   padding:4px;
-  border-radius:8px;
+  border-radius:10px;
 }
 
 .logo-text{
   font-size:30px;
   font-weight:800;
-  color:#fff;
+  color:white;
 }
 
 .nav{
@@ -68,6 +68,7 @@ body{
   text-decoration:none;
   font-weight:700;
   font-size:15px;
+  transition:0.3s;
 }
 
 .nav a:hover{
@@ -81,21 +82,19 @@ body{
   cursor:pointer;
 }
 
-/* HERO */
+/* HERO VIDEO */
 
 .hero{
+  position:relative;
   width:100%;
   min-height:100vh;
-  padding:170px 7% 90px;
-
-  position:relative;
 
   display:flex;
   align-items:center;
 
-  isolation:isolate;
-
   overflow:hidden;
+
+  padding:170px 7% 90px;
 }
 
 .hero-video{
@@ -111,26 +110,24 @@ body{
   z-index:1;
 }
 
-.hero::after{
-  content:"";
-
+.hero-overlay{
   position:absolute;
   inset:0;
 
   background:
   linear-gradient(
   90deg,
-  rgba(2,10,28,0.72),
-  rgba(5,40,90,0.48)
+  rgba(2,10,28,0.82),
+  rgba(5,40,90,0.55)
   );
 
   z-index:2;
 }
 
 .hero-content{
-  max-width:760px;
   position:relative;
   z-index:3;
+  max-width:760px;
 }
 
 .small-title{
@@ -560,36 +557,6 @@ button{
 }
 
 /* ANIMATION */
-
-.reveal{
-  opacity:0;
-  transform:translateY(80px);
-  transition:1s;
-}
-
-.reveal.active{
-  opacity:1;
-  transform:translateY(0);
-}
-
-@keyframes heroGlow{
-
-  0%{
-    opacity:0.6;
-    transform:scale(1);
-  }
-
-  50%{
-    opacity:1;
-    transform:scale(1.08);
-  }
-
-  100%{
-    opacity:0.6;
-    transform:scale(1);
-  }
-
-}
 
 @keyframes whatsappPulse{
 
