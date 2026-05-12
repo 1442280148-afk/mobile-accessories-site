@@ -890,3 +890,16 @@ button{
   }
 
 }
+/* PRODUCT AUTO SLIDER */
+
+@keyframes productScroll{
+
+  0%{
+    transform:translateX(0);
+  }
+
+  100%{
+    transform:translateX(-50%);
+  }
+
+}
