@@ -21,6 +21,7 @@ body{
   position:fixed;
   top:0;
   left:0;
+
   width:100%;
   height:86px;
 
@@ -32,8 +33,8 @@ body{
 
   background:rgba(10,20,40,0.35);
 
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
 
   border-bottom:1px solid rgba(255,255,255,0.08);
 
@@ -49,10 +50,12 @@ body{
 .logo img{
   width:58px;
   height:58px;
+
   object-fit:contain;
 
   background:white;
   border-radius:10px;
+
   padding:5px;
 }
 
@@ -70,8 +73,10 @@ body{
 .nav a{
   color:white;
   text-decoration:none;
+
   font-size:15px;
   font-weight:700;
+
   transition:0.3s;
 }
 
@@ -93,12 +98,15 @@ body{
   align-items:center;
 
   padding:170px 7% 90px;
+
+  background:black;
 }
 
 /* VIDEO */
 
 .hero-video{
   position:absolute;
+
   top:0;
   left:0;
 
@@ -110,7 +118,7 @@ body{
   z-index:1;
 }
 
-/* DARK OVERLAY */
+/* OVERLAY */
 
 .hero-overlay{
   position:absolute;
@@ -126,10 +134,11 @@ body{
   z-index:2;
 }
 
-/* CONTENT */
+/* HERO CONTENT */
 
 .hero-content{
   position:relative;
+
   z-index:3;
 
   max-width:760px;
@@ -137,8 +146,10 @@ body{
 
 .small-title{
   color:#38bdf8;
+
   font-size:14px;
   font-weight:800;
+
   letter-spacing:2px;
 
   margin-bottom:24px;
@@ -176,10 +187,12 @@ body{
 
 .btn{
   display:inline-flex;
+
   justify-content:center;
   align-items:center;
 
   height:58px;
+
   padding:0 34px;
 
   border-radius:999px;
@@ -226,17 +239,20 @@ body{
   padding:110px 7%;
 }
 
-/* TITLE */
+/* TITLES */
 
 .section-top{
   text-align:center;
+
   margin-bottom:60px;
 }
 
 .section-top p{
   color:#1d9bf0;
+
   font-size:14px;
   font-weight:800;
+
   letter-spacing:2px;
 
   margin-bottom:15px;
@@ -252,11 +268,11 @@ body{
 .category-slider{
   width:100%;
   overflow:hidden;
-  position:relative;
 }
 
 .category-grid{
   display:flex;
+
   gap:26px;
 
   width:max-content;
@@ -291,6 +307,7 @@ body{
 .category-card img{
   width:100%;
   height:220px;
+
   object-fit:cover;
 }
 
@@ -305,6 +322,7 @@ body{
 
 .category-info p{
   color:#64748b;
+
   line-height:1.7;
 
   margin-bottom:18px;
@@ -312,7 +330,9 @@ body{
 
 .product-link{
   color:#1d9bf0;
+
   text-decoration:none;
+
   font-weight:700;
 }
 
@@ -332,13 +352,16 @@ body{
 
 .about-left img{
   width:100%;
+
   border-radius:28px;
 }
 
 .blue-text{
   color:#1d9bf0;
+
   font-size:14px;
   font-weight:800;
+
   letter-spacing:2px;
 
   margin-bottom:18px;
@@ -346,6 +369,7 @@ body{
 
 .about-right h2{
   font-size:54px;
+
   line-height:1.15;
 
   margin-bottom:24px;
@@ -353,6 +377,7 @@ body{
 
 .about-desc{
   color:#64748b;
+
   line-height:1.9;
 
   margin-bottom:35px;
@@ -377,56 +402,10 @@ body{
 
 .mini-box h3{
   color:#1d9bf0;
+
   font-size:38px;
 
   margin-bottom:10px;
-}
-
-/* WHY */
-
-.why-section{
-  padding:120px 7%;
-
-  background:
-  linear-gradient(
-  135deg,
-  #020d1f,
-  #0b4da8
-  );
-
-  color:white;
-}
-
-.white p,
-.white h2{
-  color:white;
-}
-
-.why-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-
-  gap:24px;
-}
-
-.why-card{
-  background:rgba(255,255,255,0.08);
-
-  border-radius:28px;
-
-  padding:36px;
-
-  backdrop-filter:blur(12px);
-}
-
-.why-card h3{
-  font-size:24px;
-  margin-bottom:15px;
-}
-
-.why-card p{
-  color:#dbeafe;
-  line-height:1.8;
 }
 
 /* OEM */
@@ -443,6 +422,7 @@ body{
 
 .oem-left h2{
   font-size:54px;
+
   line-height:1.15;
 
   margin-bottom:25px;
@@ -450,6 +430,7 @@ body{
 
 .oem-left p{
   color:#64748b;
+
   line-height:1.9;
 
   margin-bottom:35px;
@@ -468,6 +449,7 @@ body{
 
 .oem-box h3{
   font-size:32px;
+
   margin-bottom:26px;
 }
 
@@ -496,12 +478,14 @@ body{
 
 .contact-left h2{
   font-size:54px;
+
   margin-bottom:25px;
 }
 
 form{
   display:flex;
   flex-direction:column;
+
   gap:18px;
 }
 
@@ -561,11 +545,13 @@ button{
 
 .contact-card h3{
   font-size:34px;
+
   margin-bottom:28px;
 }
 
 .contact-card p{
   color:#dbeafe;
+
   line-height:1.8;
 
   margin-bottom:22px;
@@ -602,6 +588,7 @@ button{
 
   display:flex;
   align-items:center;
+
   gap:14px;
 }
 
@@ -686,25 +673,25 @@ button{
     grid-template-columns:1fr;
   }
 
-  .why-grid{
-    grid-template-columns:1fr 1fr;
-  }
-
 }
 
 @media(max-width:768px){
 
   .header{
     height:auto;
+
     padding:18px 6%;
 
     flex-direction:column;
+
     gap:18px;
   }
 
   .nav{
     gap:18px;
+
     flex-wrap:wrap;
+
     justify-content:center;
   }
 
@@ -721,10 +708,6 @@ button{
   .oem-left h2,
   .contact-left h2{
     font-size:38px;
-  }
-
-  .why-grid{
-    grid-template-columns:1fr;
   }
 
   .category-card{
