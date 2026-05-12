@@ -6,15 +6,19 @@
 
 html{
   scroll-behavior:smooth;
+  height:auto;
 }
 
 body{
   font-family:'Inter',sans-serif;
   background:#f4f8ff;
   color:#0f172a;
-  overflow-x:hidden;
-}
 
+  overflow-x:hidden;
+
+  height:auto;
+  min-height:100vh;
+}
 /* HEADER */
 
 .header{
@@ -156,21 +160,19 @@ overflow: visible;
 /* HERO CONTAINER */
 
 .hero-container{
-  max-width:1550px;
-  margin:auto;
+    max-width:1550px;
+    margin:auto;
 
-  min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+    gap:40px;
 
-  gap:40px;
+    padding:140px 7%;
 
-  padding:140px 7%;
-
-  position:relative;
-  z-index:3;
+    position:relative;
+    z-index:3;
 }
 
 /* HERO LEFT */
