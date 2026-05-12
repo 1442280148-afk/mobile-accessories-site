@@ -234,14 +234,21 @@ body{
 
 /* PRODUCTS */
 
+.category-slider{
+  overflow:hidden;
+  position:relative;
+}
+
 .category-grid{
   display:flex;
   gap:26px;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  padding:10px 2px 35px;
+  width:max-content;
+  animation:productScroll 28s linear infinite;
 }
 
+.category-slider:hover .category-grid{
+  animation-play-state:paused;
+}
 .category-grid::-webkit-scrollbar{
   height:8px;
 }
