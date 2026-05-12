@@ -105,12 +105,21 @@ body::-webkit-scrollbar-thumb {
   position: relative;
   display: flex;
   align-items: center;
+  overflow: hidden;
   background:
     linear-gradient(90deg, rgba(2,10,28,0.95), rgba(5,40,90,0.62)),
     url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1800&q=90");
   background-size: cover;
   background-position: center;
-  overflow: hidden;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
 .hero::before {
@@ -173,10 +182,6 @@ body::-webkit-scrollbar-thumb {
   font-weight: 900;
   margin-bottom: 28px;
   letter-spacing: -2px;
-}
-
-.hero h1::first-line {
-  color: #fff;
 }
 
 .hero-desc {
