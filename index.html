@@ -404,8 +404,11 @@
 
       </div>
 
-    </div>
- <div class="slider-bar">
+  </div>
+
+</div>
+  
+  <div class="slider-bar">
 
   <div class="slider-progress"></div>
 
@@ -774,32 +777,6 @@ progress.style.left =
 
 /* PC拖动 */
 
-slider.addEventListener('mousedown', (e) => {
-
-isDragging = true;
-
-slider.classList.add('dragging');
-
-startX = e.pageX;
-
-scrollLeft = slider.scrollLeft;
-
-stopAutoScroll();
-
-});
-
-window.addEventListener('mouseup', () => {
-
-if(!isDragging) return;
-
-isDragging = false;
-
-slider.classList.remove('dragging');
-
-startAutoScroll();
-
-});
-
 window.addEventListener('mousemove', (e) => {
 
 if(!isDragging) return;
@@ -846,6 +823,38 @@ const walk =
 slider.scrollLeft = scrollLeft - walk;
 
 updateSliderBar();
+
+  slider.addEventListener('touchstart', (e) => {
+
+    isDown = true;
+
+    startX = e.touches[0].pageX - slider.offsetLeft;
+
+    scrollLeft = slider.scrollLeft;
+
+    stopAutoScroll();
+
+}, { passive: true });
+
+slider.addEventListener('touchmove', (e) => {
+
+    if(!isDown) return;
+
+    const x = e.touches[0].pageX - slider.offsetLeft;
+
+    const walk = (x - startX) * 1.5;
+
+    slider.scrollLeft = scrollLeft - walk;
+
+}, { passive: true });
+
+slider.addEventListener('touchend', () => {
+
+    isDown = false;
+
+    startAutoScroll();
+
+});
 
 },{ passive:true });
 
