@@ -380,7 +380,7 @@ margin-top:0;
 
 .products-slider{
   width:100%;
-  overflow:hidden;
+  overflow:visible;
   position:relative;
   margin-top:20px;
 }
@@ -436,7 +436,7 @@ transition:0.15s linear;
   content:"";
   position:absolute;
   top:0;
-  width:120px;
+  width:70px;
   height:100%;
   z-index:2;
   pointer-events:none;
@@ -469,14 +469,18 @@ cursor:grab;
 touch-action:pan-x;
 
 -webkit-overflow-scrolling:touch;
-  
+
 user-select:none;
 
 scrollbar-width:none;
 
 -ms-overflow-style:none;
 
-  scroll-snap-type:x proximity;
+scroll-snap-type:x proximity;
+
+position:relative;
+
+z-index:3;
 
 }
 .category-grid::-webkit-scrollbar{
