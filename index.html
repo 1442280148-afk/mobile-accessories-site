@@ -717,15 +717,25 @@
 <script>
 
 const slider = document.querySelector('.category-grid');
+const progress = document.querySelector('.slider-progress');
 
-let isDown = false;
-let startX;
-let scrollLeft;
 let autoScroll;
+
+let isDragging = false;
+
+let startX = 0;
+
+let scrollLeft = 0;
+
+/* 自动滚动 */
 
 function startAutoScroll(){
 
+stopAutoScroll();
+
 autoScroll = setInterval(() => {
+
+if(isDragging) return;
 
 slider.scrollLeft += 1;
 
@@ -736,6 +746,8 @@ slider.scrollWidth / 2
 slider.scrollLeft = 0;
 }
 
+updateSliderBar();
+
 }, 20);
 
 }
@@ -744,67 +756,7 @@ function stopAutoScroll(){
 clearInterval(autoScroll);
 }
 
-startAutoScroll();
-
-slider.addEventListener('mouseenter', stopAutoScroll);
-
-slider.addEventListener('mouseleave', () => {
-
-if(!isDown){
-startAutoScroll();
-}
-
-});
-
-slider.addEventListener('mousedown', (e) => {
-
-isDown = true;
-
-slider.classList.add('dragging');
-
-startX = e.pageX - slider.offsetLeft;
-
-scrollLeft = slider.scrollLeft;
-
-stopAutoScroll();
-
-});
-
-slider.addEventListener('mouseup', () => {
-
-isDown = false;
-
-slider.classList.remove('dragging');
-
-startAutoScroll();
-
-});
-
-slider.addEventListener('mouseleave', () => {
-
-isDown = false;
-
-slider.classList.remove('dragging');
-
-startAutoScroll();
-
-});
-
-slider.addEventListener('mousemove', (e) => {
-
-if(!isDown) return;
-
-e.preventDefault();
-
-const x = e.pageX - slider.offsetLeft;
-
-const walk = (x - startX) * 1.5;
-
-slider.scrollLeft = scrollLeft - walk;
-
-});
-
-const progress = document.querySelector('.slider-progress');
+/* 进度条 */
 
 function updateSliderBar(){
 
@@ -822,10 +774,99 @@ progress.style.left =
 
 }
 
-slider.addEventListener('scroll', updateSliderBar);
+/* PC拖动 */
+
+slider.addEventListener('mousedown', (e) => {
+
+isDragging = true;
+
+slider.classList.add('dragging');
+
+startX = e.pageX;
+
+scrollLeft = slider.scrollLeft;
+
+stopAutoScroll();
+
+});
+
+window.addEventListener('mouseup', () => {
+
+if(!isDragging) return;
+
+isDragging = false;
+
+slider.classList.remove('dragging');
+
+startAutoScroll();
+
+});
+
+window.addEventListener('mousemove', (e) => {
+
+if(!isDragging) return;
+
+e.preventDefault();
+
+const walk = (e.pageX - startX) * 1.5;
+
+slider.scrollLeft = scrollLeft - walk;
 
 updateSliderBar();
-  
+
+});
+
+/* 手机触摸 */
+
+slider.addEventListener('touchstart', (e) => {
+
+isDragging = true;
+
+startX = e.touches[0].pageX;
+
+scrollLeft = slider.scrollLeft;
+
+stopAutoScroll();
+
+},{ passive:true });
+
+slider.addEventListener('touchend', () => {
+
+isDragging = false;
+
+startAutoScroll();
+
+});
+
+slider.addEventListener('touchmove', (e) => {
+
+if(!isDragging) return;
+
+const walk =
+(e.touches[0].pageX - startX) * 1.5;
+
+slider.scrollLeft = scrollLeft - walk;
+
+updateSliderBar();
+
+},{ passive:true });
+
+/* hover暂停 */
+
+slider.addEventListener('mouseenter', stopAutoScroll);
+
+slider.addEventListener('mouseleave', () => {
+
+if(!isDragging){
+startAutoScroll();
+}
+
+});
+
+updateSliderBar();
+
+startAutoScroll();
+
 </script>
 
 </body>
