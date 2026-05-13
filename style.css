@@ -460,6 +460,10 @@ scroll-behavior:smooth;
 
 cursor:grab;
 
+touch-action:pan-x;
+
+-webkit-overflow-scrolling:touch;
+  
 user-select:none;
 
 scrollbar-width:none;
