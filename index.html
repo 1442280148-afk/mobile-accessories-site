@@ -718,6 +718,7 @@
 <script>
 
 const slider = document.querySelector('.category-grid');
+
 const progress = document.querySelector('.slider-progress');
 
 let autoScroll;
@@ -742,7 +743,7 @@ slider.scrollLeft += 1;
 
 if(
 slider.scrollLeft >=
-slider.scrollWidth / 2
+slider.scrollWidth - slider.clientWidth
 ){
 slider.scrollLeft = 0;
 }
@@ -754,7 +755,9 @@ updateSliderBar();
 }
 
 function stopAutoScroll(){
+
 clearInterval(autoScroll);
+
 }
 
 /* 进度条 */
@@ -764,11 +767,12 @@ function updateSliderBar(){
 const maxScroll =
 slider.scrollWidth - slider.clientWidth;
 
+if(maxScroll <= 0) return;
+
 const percentage =
 slider.scrollLeft / maxScroll;
 
-const maxMove =
-220 - 90;
+const maxMove = 130;
 
 progress.style.left =
 (percentage * maxMove) + 'px';
@@ -777,8 +781,22 @@ progress.style.left =
 
 /* PC拖动 */
 
+slider.addEventListener('mousedown', (e) => {
+
+isDragging = true;
+
+slider.classList.add('dragging');
+
+startX = e.pageX;
+
+scrollLeft = slider.scrollLeft;
+
+stopAutoScroll();
+
+});
+
 window.addEventListener('mousemove', (e) => {
-  
+
 if(!isDragging) return;
 
 e.preventDefault();
@@ -791,7 +809,9 @@ updateSliderBar();
 
 });
 
-  window.addEventListener('mouseup', () => {
+window.addEventListener('mouseup', () => {
+
+if(!isDragging) return;
 
 isDragging = false;
 
@@ -813,15 +833,7 @@ scrollLeft = slider.scrollLeft;
 
 stopAutoScroll();
 
-},{ passive:true });
-
-slider.addEventListener('touchend', () => {
-
-isDragging = false;
-
-startAutoScroll();
-
-});
+}, { passive:true });
 
 slider.addEventListener('touchmove', (e) => {
 
@@ -834,39 +846,35 @@ slider.scrollLeft = scrollLeft - walk;
 
 updateSliderBar();
 
-}, { passive: true });
-
-slider.addEventListener('touchmove', (e) => {
-
-    if(!isDragging) return;
-
-    const x = e.touches[0].pageX - slider.offsetLeft;
-
-    const walk = (x - startX) * 1.5;
-
-    slider.scrollLeft = scrollLeft - walk;
-
-}, { passive: true });
+}, { passive:true });
 
 slider.addEventListener('touchend', () => {
 
-    isDragging = false;
+isDragging = false;
 
-    startAutoScroll();
+startAutoScroll();
 
 });
 
 /* hover暂停 */
 
-slider.addEventListener('mouseenter', stopAutoScroll);
+slider.addEventListener('mouseenter', () => {
+
+stopAutoScroll();
+
+});
 
 slider.addEventListener('mouseleave', () => {
 
 if(!isDragging){
+
 startAutoScroll();
+
 }
 
 });
+
+/* 初始化 */
 
 updateSliderBar();
 
