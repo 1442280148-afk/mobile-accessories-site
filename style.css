@@ -1336,13 +1336,9 @@ color:#0f172a;
 
 .cert-banner{
 
-position:relative;
-
-width:100%;
+background:#f4f8ff;
 
 overflow:hidden;
-
-background:#fff;
 
 }
 
@@ -1350,25 +1346,29 @@ background:#fff;
 
 width:100%;
 
+max-width:1400px;
+
 display:block;
 
-object-fit:cover;
+margin:auto;
+
+border-radius:20px;
 
 }
 
 .cert-overlay{
 
-position:absolute;
-
-top:70px;
-
-left:50%;
-
-transform:translateX(-50%);
-
 text-align:center;
 
+padding-top:60px;
+
+padding-bottom:40px;
+
+position:relative;
+
 z-index:2;
+
+background:#f4f8ff;
 
 }
 
