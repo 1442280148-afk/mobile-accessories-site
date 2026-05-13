@@ -398,12 +398,12 @@ margin-top:0;
 
 .products-slider::before{
   left:0;
-  background:linear-gradient(to right,#f4f8ff,transparent);
+background:linear-gradient(to right,#f4f8ff 10%,transparent);
 }
 
 .products-slider::after{
   right:0;
-  background:linear-gradient(to left,#f4f8ff,transparent);
+background:linear-gradient(to left,#f4f8ff 10%,transparent);
 }
 
 .category-grid{
@@ -426,9 +426,15 @@ scrollbar-width:none;
 
 -ms-overflow-style:none;
 
+  scroll-snap-type:x proximity;
+
 }
 .category-grid::-webkit-scrollbar{
     display:none;
+}
+
+.category-grid.dragging{
+    cursor:grabbing;
 }
 
 /* PRODUCT CARD */
