@@ -379,78 +379,55 @@ margin-top:0;
 /* PRODUCTS AUTO SLIDER */
 
 .products-slider{
-  width:100%;
-  overflow:visible;
-  position:relative;
-  margin-top:20px;
-}
 
-/* SLIDER BAR */
-
-.slider-bar{
-
-width:220px;
-
-height:6px;
-
-background:#dbe7f5;
-
-border-radius:999px;
-
-margin:35px auto 0;
+width:100%;
 
 position:relative;
 
-overflow:hidden;
+overflow:visible;
 
-display:block;
-
-opacity:1;
-
-z-index:5;
+margin-top:20px;
 
 }
 
-.slider-progress{
-
-width:90px;
-
-height:100%;
-
-background:linear-gradient(135deg,#1d9bf0,#006cff);
-
-border-radius:999px;
-
-position:absolute;
-
-left:0;
-
-top:0;
-
-transition:0.15s linear;
-
-}
+/* 渐变遮罩 */
 
 .products-slider::before,
 .products-slider::after{
-  content:"";
-  position:absolute;
-  top:0;
-  width:70px;
-  height:100%;
-  z-index:2;
-  pointer-events:none;
+
+content:"";
+
+position:absolute;
+
+top:0;
+
+width:120px;
+
+height:100%;
+
+z-index:2;
+
+pointer-events:none;
+
 }
 
 .products-slider::before{
-  left:0;
+
+left:0;
+
 background:linear-gradient(to right,#f4f8ff 10%,transparent);
+
 }
 
 .products-slider::after{
-  right:0;
+
+right:0;
+
 background:linear-gradient(to left,#f4f8ff 10%,transparent);
+
 }
+
+/* 横向滚动区域 */
 
 .category-grid{
 
@@ -472,8 +449,6 @@ scroll-behavior:smooth;
 
 cursor:grab;
 
-pointer-events:auto;
-
 touch-action:pan-x;
 
 -webkit-overflow-scrolling:touch;
@@ -489,15 +464,127 @@ position:relative;
 z-index:3;
 
 }
+
 .category-grid::-webkit-scrollbar{
-    display:none;
+
+display:none;
+
 }
 
 .category-grid.dragging{
-    cursor:grabbing;
+
+cursor:grabbing;
+
 }
 
 /* PRODUCT CARD */
+
+.category-card{
+
+flex-shrink:0;
+
+min-width:285px;
+
+max-width:285px;
+
+background:rgba(255,255,255,0.96);
+
+border-radius:28px;
+
+overflow:hidden;
+
+position:relative;
+
+transform-style:preserve-3d;
+
+transition:0.6s cubic-bezier(.19,1,.22,1);
+
+will-change:transform;
+
+box-shadow:
+0 20px 45px rgba(15,23,42,0.08);
+
+border:1px solid rgba(255,255,255,0.9);
+
+scroll-snap-align:start;
+
+}
+
+/* 图片 */
+
+.category-card img{
+
+width:100%;
+
+height:180px;
+
+object-fit:cover;
+
+display:block;
+
+pointer-events:none;
+
+user-select:none;
+
+-webkit-user-drag:none;
+
+transition:
+transform .6s ease,
+filter .4s ease;
+
+}
+
+.category-card:hover img{
+
+transform:
+scale(1.08)
+rotate(1deg);
+
+filter:
+brightness(1.08)
+contrast(1.05);
+
+}
+
+/* 底部滑动条 */
+
+.slider-bar{
+
+width:220px;
+
+height:6px;
+
+background:#dbe7f5;
+
+border-radius:999px;
+
+margin:35px auto 0;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.slider-progress{
+
+position:absolute;
+
+left:0;
+
+top:0;
+
+width:90px;
+
+height:100%;
+
+background:linear-gradient(90deg,#4f8fff,#2d6cff);
+
+border-radius:999px;
+
+transition:0.15s linear;
+
+}
 
 .category-card{
 
