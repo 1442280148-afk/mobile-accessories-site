@@ -428,8 +428,6 @@ scrollbar-width:none;
 
   scroll-snap-type:x proximity;
 
-  animation:autoMove 28s linear infinite;
-
 }
 .category-grid::-webkit-scrollbar{
     display:none;
@@ -437,26 +435,6 @@ scrollbar-width:none;
 
 .category-grid.dragging{
     cursor:grabbing;
-}
-
-.category-grid:hover{
-    animation-play-state:paused;
-}
-
-@keyframes autoMove{
-
-0%{
-    transform:translateX(0);
-}
-
-50%{
-    transform:translateX(-180px);
-}
-
-100%{
-    transform:translateX(0);
-}
-
 }
 
 /* PRODUCT CARD */
