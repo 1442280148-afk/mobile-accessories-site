@@ -577,6 +577,10 @@ filter 0.4s ease;
 
 display:block;
 
+pointer-events:none;
+user-select:none;
+-webkit-user-drag:none;
+  
 }
 
 .category-card:hover img{
