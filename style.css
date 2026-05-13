@@ -140,7 +140,7 @@ body{
 
 overflow: visible;
 
-  padding:0;
+  padding:0;----
 }
 
 .hero::before{
@@ -160,30 +160,33 @@ overflow: visible;
 /* HERO CONTAINER */
 
 .hero-container{
-    max-width:1550px;
-    margin:auto;
 
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+display:flex;
 
-    gap:40px;
+align-items:center;
 
-    padding:140px 7%;
+justify-content:space-between;
 
-    position:relative;
-    z-index:3;
+gap:60px;
+
+flex-wrap:wrap;
+
+width:100%;
+
+padding:140px 7% 80px;
+
 }
-
 /* HERO LEFT */
 
 .hero-content{
-  flex:0 0 46%;
-  position:relative;
-  z-index:2;
-  animation:heroFade 1.1s ease forwards;
-}
 
+flex:1 1 520px;
+
+max-width:620px;
+
+width:100%;
+
+}
 @keyframes heroFade{
 
   from{
@@ -270,15 +273,20 @@ overflow: visible;
 
 .hero-video{
 
-  flex:0 0 54%;
+flex:1 1 420px;
 
-  display:flex;
+max-width:680px;
 
-  justify-content:flex-end;
+width:100%;
 
-  align-items:center;
+display:flex;
 
-  margin-top:-40px;
+justify-content:center;
+
+align-items:center;
+
+margin-top:0;
+
 }
 
 /* VIDEO CARD */
@@ -287,7 +295,7 @@ overflow: visible;
 
   width:100%;
 
-  max-width:900px;
+  max-width:680px;
 
   aspect-ratio:16/9;
 
