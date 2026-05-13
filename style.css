@@ -456,15 +456,23 @@ background:linear-gradient(to left,#f4f8ff 10%,transparent);
 
 display:flex;
 
+flex-wrap:nowrap;
+
+white-space:nowrap;
+
 gap:26px;
 
 padding:10px 0 35px;
 
 overflow-x:auto;
 
+overflow-y:hidden;
+
 scroll-behavior:smooth;
 
 cursor:grab;
+
+pointer-events:auto;
 
 touch-action:pan-x;
 
@@ -475,8 +483,6 @@ user-select:none;
 scrollbar-width:none;
 
 -ms-overflow-style:none;
-
-scroll-snap-type:x proximity;
 
 position:relative;
 
@@ -495,7 +501,10 @@ z-index:3;
 
 .category-card{
 
+  flex-shrink:0;
+ 
   min-width:285px;
+
   max-width:285px;
 
   background:rgba(255,255,255,0.96);
