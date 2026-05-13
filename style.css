@@ -140,7 +140,7 @@ body{
 
 overflow: visible;
 
-  padding:0;----
+  padding:0;
 }
 
 .hero::before{
@@ -410,29 +410,25 @@ margin-top:0;
 
 display:flex;
 
-gap:20px;
-
-width:max-content;
-
-animation:autoScroll 28s linear infinite;
+gap:26px;
 
 padding:10px 0 35px;
 
-}
-.category-grid:hover{
-  animation-play-state:paused;
-}
+overflow-x:auto;
 
-@keyframes autoScroll{
+scroll-behavior:smooth;
 
-0%{
-transform:translateX(0);
+cursor:grab;
+
+user-select:none;
+
+scrollbar-width:none;
+
+-ms-overflow-style:none;
+
 }
-
-100%{
-transform:translateX(-50%);
-}
-
+.category-grid::-webkit-scrollbar{
+    display:none;
 }
 
 /* PRODUCT CARD */
