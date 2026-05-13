@@ -750,7 +750,7 @@ slider.scrollLeft = 0;
 
 updateSliderBar();
 
-}, 20);
+},20);
 
 }
 
@@ -779,9 +779,9 @@ progress.style.left =
 
 }
 
-/* PC拖动 */
+/* 鼠标拖动 */
 
-slider.addEventListener('mousedown', (e) => {
+slider.addEventListener('mousedown',(e)=>{
 
 isDragging = true;
 
@@ -795,21 +795,23 @@ stopAutoScroll();
 
 });
 
-window.addEventListener('mousemove', (e) => {
+window.addEventListener('mousemove',(e)=>{
 
 if(!isDragging) return;
 
 e.preventDefault();
 
-const walk = (e.pageX - startX) * 1.5;
+const walk =
+(e.pageX - startX) * 1.5;
 
-slider.scrollLeft = scrollLeft - walk;
+slider.scrollLeft =
+scrollLeft - walk;
 
 updateSliderBar();
 
 });
 
-window.addEventListener('mouseup', () => {
+window.addEventListener('mouseup',()=>{
 
 if(!isDragging) return;
 
@@ -821,9 +823,9 @@ startAutoScroll();
 
 });
 
-/* 手机触摸 */
+/* 手机拖动 */
 
-slider.addEventListener('touchstart', (e) => {
+slider.addEventListener('touchstart',(e)=>{
 
 isDragging = true;
 
@@ -833,22 +835,23 @@ scrollLeft = slider.scrollLeft;
 
 stopAutoScroll();
 
-}, { passive:true });
+},{ passive:true });
 
-slider.addEventListener('touchmove', (e) => {
+slider.addEventListener('touchmove',(e)=>{
 
 if(!isDragging) return;
 
 const walk =
 (e.touches[0].pageX - startX) * 1.5;
 
-slider.scrollLeft = scrollLeft - walk;
+slider.scrollLeft =
+scrollLeft - walk;
 
 updateSliderBar();
 
-}, { passive:true });
+},{ passive:true });
 
-slider.addEventListener('touchend', () => {
+slider.addEventListener('touchend',()=>{
 
 isDragging = false;
 
@@ -858,13 +861,13 @@ startAutoScroll();
 
 /* hover暂停 */
 
-slider.addEventListener('mouseenter', () => {
+slider.addEventListener('mouseenter',()=>{
 
 stopAutoScroll();
 
 });
 
-slider.addEventListener('mouseleave', () => {
+slider.addEventListener('mouseleave',()=>{
 
 if(!isDragging){
 
