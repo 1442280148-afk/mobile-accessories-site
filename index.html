@@ -725,8 +725,8 @@ autoScroll = setInterval(() => {
 slider.scrollLeft += 1;
 
 if(
-slider.scrollLeft + slider.clientWidth
->= slider.scrollWidth
+slider.scrollLeft >=
+slider.scrollWidth / 2
 ){
 slider.scrollLeft = 0;
 }
