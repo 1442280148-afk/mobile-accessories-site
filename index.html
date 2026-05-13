@@ -804,6 +804,28 @@ slider.scrollLeft = scrollLeft - walk;
 
 });
 
+const progress = document.querySelector('.slider-progress');
+
+function updateSliderBar(){
+
+const maxScroll =
+slider.scrollWidth - slider.clientWidth;
+
+const percentage =
+slider.scrollLeft / maxScroll;
+
+const maxMove =
+220 - 90;
+
+progress.style.left =
+(percentage * maxMove) + 'px';
+
+}
+
+slider.addEventListener('scroll', updateSliderBar);
+
+updateSliderBar();
+  
 </script>
 
 </body>
