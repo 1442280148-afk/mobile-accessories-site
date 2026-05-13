@@ -716,6 +716,40 @@ const slider = document.querySelector('.category-grid');
 let isDown = false;
 let startX;
 let scrollLeft;
+let autoScroll;
+
+function startAutoScroll(){
+
+autoScroll = setInterval(() => {
+
+slider.scrollLeft += 1;
+
+if(
+slider.scrollLeft + slider.clientWidth
+>= slider.scrollWidth
+){
+slider.scrollLeft = 0;
+}
+
+}, 20);
+
+}
+
+function stopAutoScroll(){
+clearInterval(autoScroll);
+}
+
+startAutoScroll();
+
+slider.addEventListener('mouseenter', stopAutoScroll);
+
+slider.addEventListener('mouseleave', () => {
+
+if(!isDown){
+startAutoScroll();
+}
+
+});
 
 slider.addEventListener('mousedown', (e) => {
 
@@ -727,13 +761,7 @@ startX = e.pageX - slider.offsetLeft;
 
 scrollLeft = slider.scrollLeft;
 
-});
-
-slider.addEventListener('mouseleave', () => {
-
-isDown = false;
-
-slider.classList.remove('dragging');
+stopAutoScroll();
 
 });
 
@@ -742,6 +770,18 @@ slider.addEventListener('mouseup', () => {
 isDown = false;
 
 slider.classList.remove('dragging');
+
+startAutoScroll();
+
+});
+
+slider.addEventListener('mouseleave', () => {
+
+isDown = false;
+
+slider.classList.remove('dragging');
+
+startAutoScroll();
 
 });
 
@@ -753,13 +793,13 @@ e.preventDefault();
 
 const x = e.pageX - slider.offsetLeft;
 
-const walk = (x - startX) * 1.6;
+const walk = (x - startX) * 1.5;
 
 slider.scrollLeft = scrollLeft - walk;
 
 });
 
-</script>  
+</script>
 
 </body>
 
