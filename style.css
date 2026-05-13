@@ -397,11 +397,17 @@ background:#dbe7f5;
 
 border-radius:999px;
 
-margin:30px auto 0;
+margin:35px auto 0;
 
 position:relative;
 
 overflow:hidden;
+
+display:block;
+
+opacity:1;
+
+z-index:5;
 
 }
 
