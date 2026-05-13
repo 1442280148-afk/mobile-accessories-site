@@ -826,7 +826,7 @@ updateSliderBar();
 
   slider.addEventListener('touchstart', (e) => {
 
-    isDown = true;
+    isDragging = true;
 
     startX = e.touches[0].pageX - slider.offsetLeft;
 
@@ -838,7 +838,7 @@ updateSliderBar();
 
 slider.addEventListener('touchmove', (e) => {
 
-    if(!isDown) return;
+    if(!isDragging) return;
 
     const x = e.touches[0].pageX - slider.offsetLeft;
 
@@ -850,7 +850,7 @@ slider.addEventListener('touchmove', (e) => {
 
 slider.addEventListener('touchend', () => {
 
-    isDown = false;
+    isDragging = false;
 
     startAutoScroll();
 
