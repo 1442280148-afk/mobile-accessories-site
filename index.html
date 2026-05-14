@@ -509,8 +509,12 @@ const slider = document.querySelector('.category-grid');
 const progress = document.querySelector('.slider-progress');
 
 let isDown = false;
+
 let startX;
+
 let scrollLeft;
+
+/* 更新进度条 */
 
 function updateProgress(){
 
@@ -525,7 +529,7 @@ function updateProgress(){
 
 }
 
-slider.addEventListener('scroll', updateProgress);
+slider.addEventListener('scroll',updateProgress);
 
 /* 鼠标拖动 */
 
@@ -559,57 +563,32 @@ slider.addEventListener('mousemove',(e)=>{
 
   const x = e.pageX - slider.offsetLeft;
 
-  const walk = (x - startX) * 1.5;
+  const walk = (x - startX) * 1.3;
 
   slider.scrollLeft = scrollLeft - walk;
 
 });
 
-/* 自动滑动 */
+/* 真正流畅自动滑动 */
 
-let autoSlide = setInterval(()=>{
+function autoScroll(){
 
-  slider.scrollLeft += 1;
+  slider.scrollLeft += 0.5;
 
   if(
     slider.scrollLeft >=
     slider.scrollWidth - slider.clientWidth
   ){
 
-    slider.scrollLeft = 0;
+    slider.scrollLeft = 1;
 
   }
 
-},20);
+  requestAnimationFrame(autoScroll);
 
-/* 鼠标进入暂停 */
+}
 
-slider.addEventListener('mouseenter',()=>{
-
-  clearInterval(autoSlide);
-
-});
-
-/* 鼠标离开继续 */
-
-slider.addEventListener('mouseleave',()=>{
-
-  autoSlide = setInterval(()=>{
-
-    slider.scrollLeft += 1;
-
-    if(
-      slider.scrollLeft >=
-      slider.scrollWidth - slider.clientWidth
-    ){
-
-      slider.scrollLeft = 0;
-
-    }
-
-  },20);
-
-});
+requestAnimationFrame(autoScroll);
 
 updateProgress();
 
