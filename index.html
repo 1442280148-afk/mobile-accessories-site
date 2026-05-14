@@ -243,10 +243,6 @@
 
   </div>
 
-  <div class="slider-bar">
-    <div class="slider-progress"></div>
-  </div>
-
 </section>
 
 <section class="oem-banner">
@@ -502,98 +498,6 @@
 
 </div>
 
-<script>
-
-const slider = document.querySelector('.category-grid');
-
-const progress = document.querySelector('.slider-progress');
-
-let isDown = false;
-
-let startX;
-
-let scrollLeft;
-
-/* 更新进度条 */
-
-function updateProgress(){
-
-  const maxScroll =
-  slider.scrollWidth - slider.clientWidth;
-
-  const percent =
-  slider.scrollLeft / maxScroll;
-
-  progress.style.width =
-  `${90 + percent * 120}px`;
-
-}
-
-slider.addEventListener('scroll',updateProgress);
-
-/* 鼠标拖动 */
-
-slider.addEventListener('mousedown',(e)=>{
-
-  isDown = true;
-
-  startX = e.pageX - slider.offsetLeft;
-
-  scrollLeft = slider.scrollLeft;
-
-});
-
-slider.addEventListener('mouseleave',()=>{
-
-  isDown = false;
-
-});
-
-slider.addEventListener('mouseup',()=>{
-
-  isDown = false;
-
-});
-
-slider.addEventListener('mousemove',(e)=>{
-
-  if(!isDown) return;
-
-  e.preventDefault();
-
-  const x = e.pageX - slider.offsetLeft;
-
-  const walk = (x - startX) * 1.3;
-
-  slider.scrollLeft = scrollLeft - walk;
-
-});
-
-/* 真正流畅自动滑动 */
-
-function autoScroll(){
-
-  slider.scrollLeft += 0.5;
-
-  if(
-    slider.scrollLeft >=
-    slider.scrollWidth - slider.clientWidth
-  ){
-
-    slider.scrollLeft = 1;
-
-  }
-
-  requestAnimationFrame(autoScroll);
-
-}
-
-requestAnimationFrame(autoScroll);
-
-updateProgress();
-
-</script>
-  
 </body>
 
 </html>
