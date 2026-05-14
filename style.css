@@ -1468,3 +1468,26 @@ font-size:32px;
     box-shadow:0 20px 60px rgba(0,0,0,0.12);
 
 }
+/* PRODUCTION PROCESS */
+
+.production-process{
+
+    width:100%;
+
+    padding:80px 7%;
+
+    background:#ffffff;
+
+}
+
+.production-process img{
+
+    width:100%;
+
+    border-radius:28px;
+
+    display:block;
+
+    box-shadow:0 20px 60px rgba(0,0,0,0.12);
+
+}
