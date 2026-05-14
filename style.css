@@ -1422,3 +1422,26 @@ font-size:32px;
 }
 
 }
+/* OEM BANNER */
+
+.oem-banner{
+
+    width:100%;
+
+    padding:60px 7%;
+
+    background:#fff;
+
+}
+
+.oem-banner img{
+
+    width:100%;
+
+    border-radius:24px;
+
+    display:block;
+
+    box-shadow:0 20px 60px rgba(0,0,0,0.12);
+
+}
