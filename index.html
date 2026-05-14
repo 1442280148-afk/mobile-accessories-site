@@ -502,6 +502,119 @@
 
 </div>
 
+<script>
+
+const slider = document.querySelector('.category-grid');
+
+const progress = document.querySelector('.slider-progress');
+
+let isDown = false;
+let startX;
+let scrollLeft;
+
+function updateProgress(){
+
+  const maxScroll =
+  slider.scrollWidth - slider.clientWidth;
+
+  const percent =
+  slider.scrollLeft / maxScroll;
+
+  progress.style.width =
+  `${90 + percent * 120}px`;
+
+}
+
+slider.addEventListener('scroll', updateProgress);
+
+/* 鼠标拖动 */
+
+slider.addEventListener('mousedown',(e)=>{
+
+  isDown = true;
+
+  startX = e.pageX - slider.offsetLeft;
+
+  scrollLeft = slider.scrollLeft;
+
+});
+
+slider.addEventListener('mouseleave',()=>{
+
+  isDown = false;
+
+});
+
+slider.addEventListener('mouseup',()=>{
+
+  isDown = false;
+
+});
+
+slider.addEventListener('mousemove',(e)=>{
+
+  if(!isDown) return;
+
+  e.preventDefault();
+
+  const x = e.pageX - slider.offsetLeft;
+
+  const walk = (x - startX) * 1.5;
+
+  slider.scrollLeft = scrollLeft - walk;
+
+});
+
+/* 自动滑动 */
+
+let autoSlide = setInterval(()=>{
+
+  slider.scrollLeft += 1;
+
+  if(
+    slider.scrollLeft >=
+    slider.scrollWidth - slider.clientWidth
+  ){
+
+    slider.scrollLeft = 0;
+
+  }
+
+},20);
+
+/* 鼠标进入暂停 */
+
+slider.addEventListener('mouseenter',()=>{
+
+  clearInterval(autoSlide);
+
+});
+
+/* 鼠标离开继续 */
+
+slider.addEventListener('mouseleave',()=>{
+
+  autoSlide = setInterval(()=>{
+
+    slider.scrollLeft += 1;
+
+    if(
+      slider.scrollLeft >=
+      slider.scrollWidth - slider.clientWidth
+    ){
+
+      slider.scrollLeft = 0;
+
+    }
+
+  },20);
+
+});
+
+updateProgress();
+
+</script>
+  
 </body>
 
 </html>
