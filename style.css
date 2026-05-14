@@ -14,7 +14,7 @@ body{
   background:#f4f8ff;
   color:#0f172a;
 
-  overflow-x:visible;
+  overflow-x:hidden;
 
   height:auto;
   min-height:100vh;
@@ -26,7 +26,7 @@ body{
   top:0;
   left:0;
   width:100%;
-  height:86px;
+  height:78px;
   padding:14px 6%;
   display:flex;
   justify-content:space-between;
@@ -58,7 +58,7 @@ body{
 }
 
 .logo-text{
-  font-size:30px;
+  font-size:26px;
   font-weight:800;
   color:#ffffff;
   letter-spacing:0.3px;
@@ -138,7 +138,7 @@ body{
   background-size:cover;
   background-position:center;
 
-overflow: visible;
+overflow: hidden;
 
   padding:0;
 }
@@ -495,10 +495,9 @@ transition:0.15s linear;
 
 transform:
 perspective(1200px)
-rotateX(10deg)
-rotateY(-10deg)
-translateY(-18px)
-scale(1.03);
+transform:
+translateY(-8px)
+scale(1.01);
 
 box-shadow:
 0 50px 120px rgba(29,155,240,0.25),
@@ -722,7 +721,7 @@ transition:1s ease;
 
 .oem-box{
   background:#fff;
-  border-radius:34px;
+  border-radius:20px;
   padding:50px;
   box-shadow:0 28px 70px rgba(15,23,42,0.12);
   border:1px solid #e0f2fe;
