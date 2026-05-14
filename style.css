@@ -305,22 +305,6 @@ body{
   text-decoration:none;
 }
 
-.slider-bar{
-  width:220px;
-  height:6px;
-  background:#dbe7f5;
-  border-radius:999px;
-  margin:30px auto 0;
-  overflow:hidden;
-}
-
-.slider-progress{
-  width:90px;
-  height:100%;
-  background:linear-gradient(90deg,#4f8fff,#2d6cff);
-  border-radius:999px;
-}
-
 /* ABOUT */
 
 .about-section,
