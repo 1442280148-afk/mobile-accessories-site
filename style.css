@@ -1491,3 +1491,26 @@ font-size:32px;
     box-shadow:0 20px 60px rgba(0,0,0,0.12);
 
 }
+/* PRODUCTS BANNER */
+
+.products-banner{
+
+    width:100%;
+
+    padding:40px 7%;
+
+    background:#fff;
+
+}
+
+.products-banner img{
+
+    width:100%;
+
+    border-radius:28px;
+
+    display:block;
+
+    box-shadow:0 20px 60px rgba(0,0,0,0.12);
+
+}
