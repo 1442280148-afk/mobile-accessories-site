@@ -1445,3 +1445,26 @@ font-size:32px;
     box-shadow:0 20px 60px rgba(0,0,0,0.12);
 
 }
+/* FACTORY STRENGTH */
+
+.factory-strength{
+
+    width:100%;
+
+    padding:80px 7%;
+
+    background:#f5f7fb;
+
+}
+
+.factory-strength img{
+
+    width:100%;
+
+    border-radius:28px;
+
+    display:block;
+
+    box-shadow:0 20px 60px rgba(0,0,0,0.12);
+
+}
