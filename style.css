@@ -180,11 +180,9 @@ padding:140px 7% 80px;
 
 .hero-content{
 
-flex:1 1 520px;
+position:relative;
 
-max-width:620px;
-
-width:100%;
+z-index:5;
 
 }
 @keyframes heroFade{
@@ -211,14 +209,11 @@ width:100%;
 
 .hero h1{
 font-size:clamp(42px,5vw,72px);
+color:#ffffff;
 }
 
 .hero-desc{
-  max-width:650px;
-  color:#dbeafe;
-  font-size:18px;
-  line-height:1.9;
-  margin-bottom:42px;
+  color:#f1f5f9;
 }
 
 /* BUTTONS */
