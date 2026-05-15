@@ -42,12 +42,8 @@ body{
 }
 
 .logo img{
-  width:54px;
-  height:54px;
-  object-fit:contain;
-  background:rgba(255,255,255,0.92);
-  padding:4px;
-  border-radius:10px;
+  width:46px;
+  height:46px;
 }
 
 .logo-text{
@@ -205,7 +201,7 @@ body{
 /* COMMON */
 
 .section{
-  padding:100px 7%;
+  padding:80px 5%;
 }
 
 .section-top{
@@ -265,10 +261,11 @@ body{
 
 .category-card img{
   width:100%;
-  height:190px;
+  height:170px;
   object-fit:contain;
   background:#fff;
-  padding:18px;
+  padding:10px;
+  transition:.35s;
 }
 
 .category-card:hover img{
@@ -323,7 +320,7 @@ body{
 
 .about-left video{
   width:100%;
-  height:420px;
+  height:360px;
   object-fit:cover;
   display:block;
   border-radius:18px;
@@ -375,7 +372,7 @@ body{
   rgba(25,80,150,0.82)
   ),
   url("https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1800&q=90");
-  background-size:cover;
+  background-size:105%;
   background-position:center;
 }
 
@@ -507,6 +504,8 @@ button:hover{
   border-radius:18px;
   display:block;
   box-shadow:0 10px 30px rgba(0,0,0,0.08);
+max-height:420px;
+object-fit:cover;
 }
 
 /* CERTIFICATE */
@@ -670,6 +669,7 @@ button:hover{
   .category-card{
     min-width:240px;
     max-width:240px;
+  height:340px;
   }
 
   .about-boxes{
