@@ -165,6 +165,13 @@ body{
   flex-wrap:wrap;
 }
 
+.reply-text{
+  margin-top:22px;
+  color:#dbeafe;
+  font-size:15px;
+  letter-spacing:0.5px;
+}
+
 .btn{
   display:inline-flex;
   align-items:center;
