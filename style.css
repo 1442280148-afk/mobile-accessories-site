@@ -236,14 +236,9 @@ body{
 }
 
 .category-grid{
-  display:flex;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
   gap:22px;
-  overflow-x:auto;
-  overflow-y:hidden;
-  padding:10px 0 35px;
-  scrollbar-width:none;
-  -ms-overflow-style:none;
-  scroll-behavior:smooth;
 }
 
 .category-grid::-webkit-scrollbar{
@@ -251,15 +246,11 @@ body{
 }
 
 .category-card{
-  flex-shrink:0;
-  min-width:220px;
-  max-width:220px;
   background:#fff;
-  border-radius:18px;
+  border-radius:8px;
   overflow:hidden;
-  border:1px solid rgba(255,255,255,0.9);
-  box-shadow:0 12px 35px rgba(15,23,42,0.08);
-  transition:.35s ease;
+  border:1px solid #edf2f7;
+  transition:.3s;
 }
 
 .category-card:hover{
@@ -274,9 +265,10 @@ body{
 
 .category-card img{
   width:100%;
-  height:140px;
-  object-fit:cover;
-  transition:.5s ease;
+  height:190px;
+  object-fit:contain;
+  background:#fff;
+  padding:18px;
 }
 
 .category-card:hover img{
@@ -284,17 +276,19 @@ body{
 }
 
 .category-info{
-  padding:20px;
+  padding:16px 18px 20px;
+  text-align:center;
 }
 
 .category-info h3{
   font-size:18px;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 
 .category-info p{
   color:#64748b;
-  line-height:1.8;
+  line-height:1.7;
+  font-size:14px;
 }
 
 .product-link{
@@ -622,6 +616,10 @@ button:hover{
     display:block;
   }
 
+  .category-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
   .nav{
     position:absolute;
     top:72px;
@@ -686,5 +684,4 @@ button:hover{
     font-size:24px;
   }
 
-}
 }
