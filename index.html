@@ -409,17 +409,40 @@ class="btn secondary">
       Contact XiQi Technology
     </h2>
 
-    <form>
+   <form id="inquiryForm" class="inquiry-form">
 
-      <input type="text" placeholder="Your Name">
-      <input type="email" placeholder="Email Address">
-      <textarea placeholder="Tell us what products you need"></textarea>
+  <input
+  type="text"
+  name="name"
+  placeholder="Your Name"
+  required>
 
-      <button type="button">
-        Send Message
-      </button>
+  <input
+  type="email"
+  name="email"
+  placeholder="Email Address"
+  required>
 
-    </form>
+  <input
+  type="text"
+  name="whatsapp"
+  placeholder="WhatsApp Number">
+
+  <input
+  type="text"
+  name="product"
+  placeholder="Product Interested">
+
+  <textarea
+  name="message"
+  placeholder="Tell us what products you need"
+  required></textarea>
+
+  <button type="submit">
+    Send Inquiry
+  </button>
+
+</form>
 
   </div>
 
@@ -568,6 +591,60 @@ class="btn secondary">
   </a>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+
+const supabaseUrl = 'https://qndwtogovmkuexudtnua.supabase.co';
+const supabaseKey = 'qndwtogovmkuexudtnua';
+
+const client = supabase.createClient(supabaseUrl, supabaseKey);
+
+document
+.getElementById('inquiryForm')
+
+.addEventListener('submit', async (e)=>{
+
+e.preventDefault();
+
+const form = e.target;
+
+const data = {
+
+name: form.name.value,
+
+email: form.email.value,
+
+whatsapp: form.whatsapp.value,
+
+product: form.product.value,
+
+message: form.message.value
+
+};
+
+const { error } = await client
+.from('inquiries')
+.insert([data]);
+
+if(error){
+
+alert('Submission failed');
+
+console.log(error);
+
+}else{
+
+alert('Inquiry submitted successfully!');
+
+form.reset();
+
+}
+
+});
+
+</script>
   
 <script src="script.js"></script>
   
