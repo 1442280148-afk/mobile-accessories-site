@@ -656,7 +656,7 @@ button:hover{
 
 .product-card img{
   width:100%;
-  height:260px;
+  height:220px;
   object-fit:cover;
   display:block;
 }
@@ -1025,29 +1025,6 @@ button:hover{
     grid-template-columns:1fr;
   }
 
-}
-
-.footer{
-  text-align:center;
-  padding:70px 7%;
-  background:#020d1f;
-  color:#fff;
-}
-
-.footer-logo{
-  font-size:30px;
-  font-weight:900;
-  margin-bottom:14px;
-}
-
-.footer p{
-  color:#cbd5e1;
-  line-height:1.8;
-}
-
-.copyright{
-  margin-top:20px;
-  font-size:14px;
 }
 
 /* WHATSAPP */
