@@ -945,6 +945,76 @@ button:hover{
 /* FOOTER */
 
 .footer{
+  background:#020d1f;
+  padding:80px 7% 40px;
+  color:#fff;
+}
+
+.footer-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:40px;
+}
+
+.footer-col{
+  display:flex;
+  flex-direction:column;
+}
+
+.footer-logo{
+  font-size:30px;
+  font-weight:900;
+  margin-bottom:18px;
+}
+
+.footer-desc{
+  color:#94a3b8;
+  line-height:1.9;
+  max-width:320px;
+}
+
+.footer-col h3{
+  font-size:18px;
+  margin-bottom:20px;
+}
+
+.footer-col a{
+  color:#94a3b8;
+  text-decoration:none;
+  margin-bottom:14px;
+  transition:.3s;
+}
+
+.footer-col a:hover{
+  color:#38bdf8;
+}
+
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,0.08);
+  margin-top:50px;
+  padding-top:24px;
+  text-align:center;
+  color:#64748b;
+  font-size:14px;
+}
+
+@media(max-width:900px){
+
+  .footer-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .footer-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+.footer{
   text-align:center;
   padding:70px 7%;
   background:#020d1f;
