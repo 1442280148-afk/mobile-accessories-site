@@ -12,6 +12,10 @@
 
   <meta name="description"
   content="Professional OEM mobile accessories manufacturer in China specializing in phone cases, chargers, screen protectors and wholesale mobile accessories.">
+  <meta name="keywords" content="mobile accessories manufacturer, phone cases, chargers, screen protectors, OEM mobile accessories, wholesale phone accessories, Guangzhou XiQi Technology">
+  <meta property="og:title" content="Guangzhou XiQi Technology - Mobile Accessories Manufacturer">
+  <meta property="og:description" content="Professional OEM mobile accessories manufacturer in China specializing in phone cases, chargers, screen protectors and wholesale mobile accessories.">
+  <meta property="og:image" content="products-banner.jpg">
 
   <link rel="stylesheet" href="style.css"/>
 
@@ -139,7 +143,7 @@ class="btn secondary">
             Shockproof, magnetic and stylish protective phone cases.
           </p>
 
-          <a href="product.html" class="product-link">
+          <a href="product.html?category=Phone%20Cases" class="product-link">
             View Details
           </a>
 
@@ -159,7 +163,7 @@ class="btn secondary">
             Fast charging wall chargers and wireless chargers.
           </p>
 
-          <a href="product.html" class="product-link">
+          <a href="product.html?category=Chargers" class="product-link">
             View Details
           </a>
 
@@ -179,7 +183,7 @@ class="btn secondary">
             Tempered glass, privacy films and HD screen protectors.
           </p>
 
-          <a href="product.html" class="product-link">
+          <a href="product.html?category=Screen%20Protectors" class="product-link">
             View Details
           </a>
 
@@ -199,7 +203,7 @@ class="btn secondary">
             High-capacity portable fast charging power banks.
           </p>
 
-          <a href="product.html" class="product-link">
+          <a href="product.html?category=Power%20Banks" class="product-link">
             View Details
           </a>
 
@@ -219,7 +223,7 @@ class="btn secondary">
             Wireless bluetooth earbuds and audio accessories.
           </p>
 
-          <a href="product.html" class="product-link">
+          <a href="product.html?category=Earbuds" class="product-link">
             View Details
           </a>
 
@@ -239,7 +243,7 @@ class="btn secondary">
             Durable USB-C, Lightning and fast charging cables.
           </p>
 
-          <a href="product.html" class="product-link">
+          <a href="product.html?category=Data%20Cables" class="product-link">
             View Details
           </a>
 
@@ -594,61 +598,12 @@ class="btn secondary">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-<script>
-
-const supabaseUrl = 'https://qndwtogovmkuexudtnua.supabase.co';
-const supabaseKey = 'sb_publishable_ArOnpIB_-fM3HVgshxbZ7w_SAjcSpRl';
-
-const client = supabase.createClient(supabaseUrl, supabaseKey);
-
-document
-.getElementById('inquiryForm')
-
-.addEventListener('submit', async (e)=>{
-
-e.preventDefault();
-
-const form = e.target;
-
-const data = {
-
-name: form.name.value,
-
-email: form.email.value,
-
-whatsapp: form.whatsapp.value,
-
-product: form.product.value,
-
-message: form.message.value
-
-};
-
-const { error } = await client
-.from('inquiries')
-.insert([data]);
-
-if(error){
-
-alert('Submission failed');
-
-console.log(error);
-
-}else{
-
-alert('Inquiry submitted successfully!');
-
-form.reset();
-
-}
-
-});
-
-</script>
+<script src="supabase-config.js"></script>
+<script src="home-products.js"></script>
+<script src="inquiry-enhancements.js"></script>
   
 <script src="script.js"></script>
   
 </body>
 
 </html>
-

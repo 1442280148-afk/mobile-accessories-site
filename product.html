@@ -4,7 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>XiQi Product Details</title>
+  <title>Wholesale Mobile Accessories Products | Guangzhou XiQi Technology</title>
+  <meta name="description" content="Explore XiQi wholesale mobile accessories including phone cases, chargers, screen protectors, earbuds, power banks and OEM accessories.">
+  <meta name="keywords" content="wholesale mobile accessories, phone cases, fast chargers, screen protectors, power banks, OEM accessories">
+  <meta property="og:title" content="Wholesale Mobile Accessories Products | Guangzhou XiQi Technology">
+  <meta property="og:description" content="Explore XiQi wholesale mobile accessories and OEM product categories for global distributors.">
+  <meta property="og:image" content="products-banner.jpg">
 
   <link rel="stylesheet" href="style.css" />
 
@@ -47,13 +52,18 @@
       <p>PROFESSIONAL MOBILE ACCESSORIES MANUFACTURER</p>
 
       <h1>
-        Wholesale Mobile <br>
-        Accessories Products
+        Mobile Accessories <br>
+        Wholesale Solutions
       </h1>
 
       <span>
-        OEM / ODM / Factory Direct / Global Export
+        OEM / ODM Manufacturing<br>
+        Factory Direct Supply
       </span>
+
+      <a href="#products" class="product-hero-btn">
+        Explore Products
+      </a>
 
     </div>
 
@@ -310,7 +320,7 @@
       Chat With Us
     </div>
 
-    <a href="#" class="whatsapp">
+    <a href="https://wa.me/8617817004592" target="_blank" class="whatsapp">
 
       <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="">
 
@@ -321,6 +331,11 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="supabase-config.js"></script>
   <script src="dynamic-products.js"></script>
+  <script>
+    window.addEventListener("scroll", () => {
+      document.querySelector(".header").classList.toggle("is-scrolled", window.scrollY > 20);
+    });
+  </script>
 
 </body>
 

@@ -6,7 +6,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Screen Protector Details | Guangzhou XiQi Technology</title>
+  <title>Product Details | Guangzhou XiQi Technology</title>
+  <meta name="description" content="View XiQi mobile accessories product details, specifications, MOQ, material, packaging and lead time for wholesale OEM cooperation.">
+  <meta name="keywords" content="mobile accessories product details, OEM phone accessories, MOQ, packaging, lead time, wholesale accessories">
+  <meta property="og:title" content="Product Details | Guangzhou XiQi Technology">
+  <meta property="og:description" content="View XiQi mobile accessories product details, specifications, MOQ, material, packaging and lead time.">
+  <meta property="og:image" content="products-banner.jpg">
 
   <link rel="stylesheet" href="style.css">
 
@@ -92,6 +97,16 @@
 
       </div>
 
+      <div class="detail-badges">
+
+        <span>OEM Support</span>
+
+        <span>Factory Direct</span>
+
+        <span>MOQ Support</span>
+
+      </div>
+
       <div class="detail-features">
 
         <div class="feature-item">
@@ -154,15 +169,77 @@
 
       <div class="detail-buttons">
 
-        <a href="https://wa.me/8617817004592" class="btn primary">
-          WhatsApp Inquiry
+        <a href="mailto:liangshanchun@xiqitrade.cn" class="btn primary">
+          Send Inquiry
         </a>
 
-        <a href="mailto:liangshanchun@xiqitrade.cn" class="btn secondary">
-          Email Us
+        <a href="https://wa.me/8617817004592" class="btn secondary">
+          WhatsApp Quick Contact
         </a>
 
       </div>
+
+    </div>
+
+  </section>
+
+  <!-- PRODUCT VIDEO -->
+
+  <section class="product-video-section" hidden>
+
+    <div class="section-top">
+
+      <p>PRODUCT VIDEO</p>
+
+      <h2>Factory Product Showcase</h2>
+
+    </div>
+
+    <div class="product-video-box">
+
+      <video id="productVideo" muted autoplay loop playsinline controls></video>
+
+    </div>
+
+  </section>
+
+  <!-- RELATED PRODUCTS -->
+
+  <section class="related-products">
+
+    <div class="section-top">
+
+      <p>RELATED PRODUCTS</p>
+
+      <h2>More OEM Accessories</h2>
+
+    </div>
+
+    <div class="related-grid">
+
+      <a href="product.html?category=Phone%20Cases" class="related-card">
+        <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=80" alt="">
+        <h3>Phone Cases</h3>
+        <p>Shockproof and customized protective solutions.</p>
+      </a>
+
+      <a href="product.html?category=Chargers" class="related-card">
+        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=80" alt="">
+        <h3>Fast Chargers</h3>
+        <p>Wholesale wall chargers and charging kits.</p>
+      </a>
+
+      <a href="product.html?category=Power%20Banks" class="related-card">
+        <img src="https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=700&q=80" alt="">
+        <h3>Power Banks</h3>
+        <p>Portable capacity options for global distributors.</p>
+      </a>
+
+      <a href="product.html?category=Data%20Cables" class="related-card">
+        <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=700&q=80" alt="">
+        <h3>Data Cables</h3>
+        <p>Durable charging and sync cable supply.</p>
+      </a>
 
     </div>
 
@@ -272,6 +349,19 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="supabase-config.js"></script>
   <script src="dynamic-products.js"></script>
+  <script>
+    document.addEventListener("click", (event) => {
+      const image = event.target.closest(".detail-gallery img");
+      const mainImage = document.querySelector(".detail-main-image img");
+
+      if (!image || !mainImage) return;
+
+      mainImage.classList.remove("is-swapping");
+      void mainImage.offsetWidth;
+      mainImage.src = image.src;
+      mainImage.classList.add("is-swapping");
+    });
+  </script>
 
 </body>
 
