@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
 
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
-  const notifyTo = process.env.SMTP_TO || smtpUser;
+  const notifyTo = process.env.RECEIVE_EMAIL || smtpUser;
 
   if (!smtpUser || !smtpPass) {
     res.status(500).json({ error: "SMTP environment variables are not configured." });
