@@ -68,6 +68,12 @@ async function saveProduct(formData, imageUrl) {
     image_url: imageUrl,
     status: clean(formData.get("status")) || "published",
     sort_order: Number(formData.get("sort_order") || 0)
+
+    moq: clean(formData.get("moq")),
+material: clean(formData.get("material")),
+packaging: clean(formData.get("packaging")),
+lead_time: clean(formData.get("lead_time")),
+features: clean(formData.get("features")),
   };
 
   if (!payload.name) {
@@ -155,6 +161,13 @@ function editProduct(product) {
   form.status.value = product.status || "published";
   form.short_desc.value = product.short_desc || "";
   form.description.value = product.description || "";
+  
+document.getElementById('moq').value = product.moq || "";
+document.getElementById('material').value = product.material || "";
+document.getElementById('packaging').value = product.packaging || "";
+document.getElementById('lead_time').value = product.lead_time || "";
+document.getElementById('features').value = product.features || "";
+  
   submitButton.textContent = "Update Product";
   cancelEditButton.hidden = false;
   setStatus("Editing product.");
