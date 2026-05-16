@@ -13,7 +13,7 @@ async function loadHomeCategories() {
     const client = supabase.createClient(config.url, config.key);
     const { data, error } = await client
       .from("categories")
-      .select("*")
+      .select("id,name,slug,image_url,description,link,status,sort_order,created_at")
       .eq("status", "published")
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false })
@@ -21,27 +21,58 @@ async function loadHomeCategories() {
 
     if (error) throw error;
 
-    grid.innerHTML = (data || []).map((category) => {
-      const name = category.name || "XiQi Category";
-      const slug = category.slug || slugify(name);
-      const link = category.link || `product.html?category=${encodeURIComponent(slug)}`;
-
-      return `
-      <div class="category-card">
-        <img src="${escapeAttribute(category.image_url || "logo.png")}" alt="${escapeAttribute(name)}">
-        <div class="category-info">
-          <h3>${escapeHtml(name)}</h3>
-          <p>${escapeHtml(category.description || "")}</p>
-          <a href="${escapeAttribute(link)}" class="product-link">
-            View Details
-          </a>
-        </div>
-      </div>
-    `;
-    }).join("");
+    renderCategories(grid, data || []);
   } catch (error) {
-    console.log("Home categories unavailable, using static cards.", error);
+    console.warn("Home categories unavailable, keeping static cards.", error);
   }
+}
+
+function renderCategories(container, categories) {
+  try {
+    if (!Array.isArray(categories) || !categories.length) {
+      return;
+    }
+
+    const cards = categories
+      .map((category) => {
+        try {
+          return renderCategoryCard(category);
+        } catch (error) {
+          console.warn("Skipped invalid category item.", error, category);
+          return "";
+        }
+      })
+      .filter(Boolean);
+
+    if (!cards.length) {
+      return;
+    }
+
+    container.innerHTML = cards.join("");
+  } catch (error) {
+    console.warn("Category render failed, keeping static cards.", error);
+  }
+}
+
+function renderCategoryCard(category) {
+  const name = cleanText(category.name) || "XiQi Category";
+  const slug = cleanText(category.slug) || slugify(name);
+  const imageUrl = cleanText(category.image_url) || "logo.png";
+  const description = cleanText(category.description);
+  const link = cleanText(category.link) || `product.html?category=${encodeURIComponent(slug)}`;
+
+  return `
+    <div class="category-card">
+      <img src="${escapeAttribute(imageUrl)}" alt="${escapeAttribute(name)}" loading="lazy">
+      <div class="category-info">
+        <h3>${escapeHtml(name)}</h3>
+        <p>${escapeHtml(description)}</p>
+        <a href="${escapeAttribute(link)}" class="product-link">
+          View Details
+        </a>
+      </div>
+    </div>
+  `;
 }
 
 async function loadFactoryVideo() {
@@ -54,7 +85,7 @@ async function loadFactoryVideo() {
     const client = supabase.createClient(config.url, config.key);
     const { data, error } = await client
       .from("factory_media")
-      .select("title,description,video_url,status,sort_order")
+      .select("title,description,video_url,status,sort_order,created_at")
       .eq("status", "published")
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false })
@@ -64,24 +95,41 @@ async function loadFactoryVideo() {
     if (error) throw error;
     if (!data || !data.video_url) return;
 
-    const source = video.querySelector("source");
-
-    if (source) {
-      source.src = data.video_url;
-      source.type = "video/mp4";
-    } else {
-      video.src = data.video_url;
-    }
-
-    video.load();
-    video.play().catch(() => {});
+    renderFactoryVideo(video, data);
   } catch (error) {
-    console.log("Factory video unavailable, using static video.", error);
+    console.warn("Factory video unavailable, keeping static video.", error);
   }
 }
 
+function renderFactoryVideo(video, media) {
+  try {
+    const videoUrl = cleanText(media.video_url);
+
+    if (!videoUrl) return;
+
+    const source = video.querySelector("source");
+
+    if (source) {
+      source.src = videoUrl;
+      source.type = "video/mp4";
+    } else {
+      video.src = videoUrl;
+    }
+
+    video.preload = "metadata";
+    video.load();
+    video.play().catch(() => {});
+  } catch (error) {
+    console.warn("Factory video render failed, keeping static video.", error);
+  }
+}
+
+function cleanText(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 function escapeHtml(value) {
-  return String(value)
+  return String(value || "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
