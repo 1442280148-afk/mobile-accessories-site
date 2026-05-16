@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XiQi Product Admin</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="admin-header">
+      <div>
+        <p>XiQi Technology</p>
+        <h1>Product Admin</h1>
+      </div>
+      <a href="product.html">View Products</a>
+    </section>
+
+    <section class="admin-panel">
+      <form id="productForm" class="product-form">
+        <input type="hidden" name="id">
+        <input type="hidden" name="current_image_url">
+
+        <div class="form-grid">
+          <label>
+            Product Name
+            <input type="text" name="name" required>
+          </label>
+
+          <label>
+            Category
+            <input type="text" name="category" placeholder="Phone Case">
+          </label>
+
+          <label>
+            Sort Order
+            <input type="number" name="sort_order" value="0">
+          </label>
+
+          <label>
+            Status
+            <select name="status">
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          Short Description
+          <input type="text" name="short_desc" placeholder="OEM mobile accessory product">
+        </label>
+
+        <label>
+          Description
+          <textarea name="description" rows="4"></textarea>
+        </label>
+
+        <label>
+          Product Image
+          <input type="file" id="imageFile" accept="image/*">
+        </label>
+
+        <div class="form-actions">
+          <button type="submit">Add Product</button>
+          <button id="cancelEdit" type="button" hidden>Cancel Edit</button>
+          <span id="formStatus"></span>
+        </div>
+      </form>
+    </section>
+
+    <section class="admin-panel">
+      <div class="section-title">
+        <p>Products</p>
+        <button id="refreshProducts" type="button">Refresh</button>
+      </div>
+      <div id="productList" class="product-list"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
