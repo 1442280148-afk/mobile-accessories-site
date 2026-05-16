@@ -81,6 +81,29 @@
 
     </div>
 
+    <div class="product-filter-bar" aria-label="Product filters">
+
+      <div class="product-filter-buttons">
+
+        <button type="button" class="product-filter-btn is-active" data-category="All Products">All Products</button>
+        <button type="button" class="product-filter-btn" data-category="Phone Cases">Phone Cases</button>
+        <button type="button" class="product-filter-btn" data-category="Chargers">Chargers</button>
+        <button type="button" class="product-filter-btn" data-category="Screen Protectors">Screen Protectors</button>
+        <button type="button" class="product-filter-btn" data-category="Power Banks">Power Banks</button>
+        <button type="button" class="product-filter-btn" data-category="Earbuds">Earbuds</button>
+        <button type="button" class="product-filter-btn" data-category="Data Cables">Data Cables</button>
+
+      </div>
+
+      <label class="product-search" aria-label="Search products">
+
+        <span class="product-search-icon" aria-hidden="true"></span>
+        <input type="search" id="productSearchInput" placeholder="Search products..." autocomplete="off">
+
+      </label>
+
+    </div>
+
     <div class="product-grid">
 
       <!-- ITEM -->
@@ -93,7 +116,7 @@
 
           <h3>Premium Phone Cases</h3>
 
-          <a href="product-detail.html">View Details</a>
+          <a href="product.html?category=Phone%20Cases">View Details</a>
 
         </div>
 
@@ -109,7 +132,7 @@
 
           <h3>Fast Chargers</h3>
 
-          <a href="product-detail.html">View Details</a>
+          <a href="product.html?category=Chargers">View Details</a>
 
         </div>
 
@@ -125,7 +148,7 @@
 
           <h3>Screen Protectors</h3>
 
-          <a href="product-detail.html">View Details</a>
+          <a href="product.html?category=Screen%20Protectors">View Details</a>
 
         </div>
 
@@ -141,7 +164,7 @@
 
           <h3>Wireless Earbuds</h3>
 
-          <a href="product-detail.html">View Details</a>
+          <a href="product.html?category=Earbuds">View Details</a>
 
         </div>
 
@@ -157,7 +180,7 @@
 
           <h3>Power Banks</h3>
 
-          <a href="product-detail.html">View Details</a>
+          <a href="product.html?category=Power%20Banks">View Details</a>
 
         </div>
 
@@ -173,7 +196,7 @@
 
           <h3>Data Cables</h3>
 
-          <a href="product-detail.html">View Details</a>
+          <a href="product.html?category=Data%20Cables">View Details</a>
 
         </div>
 
@@ -189,7 +212,7 @@
 
           <h3>Bluetooth Speakers</h3>
 
-          <a href="product-detail.html">View Details</a>
+          <a href="product.html?category=Bluetooth%20Speakers">View Details</a>
 
         </div>
 
@@ -205,7 +228,7 @@
 
           <h3>OEM Accessories</h3>
 
-          <a href="product-detail.html">View Details</a>
+          <a href="product.html?category=OEM%20Accessories">View Details</a>
 
         </div>
 
@@ -331,6 +354,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="supabase-config.js"></script>
   <script src="dynamic-products.js"></script>
+  <script src="performance.js"></script>
   <script>
     window.addEventListener("scroll", () => {
       document.querySelector(".header").classList.toggle("is-scrolled", window.scrollY > 20);

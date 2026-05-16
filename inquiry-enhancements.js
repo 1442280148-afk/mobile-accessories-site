@@ -7,11 +7,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const client = supabase.createClient(config.url, config.key);
   const button = form.querySelector('button[type="submit"]');
   const status = document.createElement("div");
+  const productInput = form.querySelector('[name="product"]');
+  const productFromUrl = new URLSearchParams(window.location.search).get("product");
 
   status.className = "form-status";
   status.setAttribute("role", "status");
   status.setAttribute("aria-live", "polite");
   button.insertAdjacentElement("afterend", status);
+
+  if (productInput && productFromUrl) {
+    productInput.value = productFromUrl;
+  }
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -30,15 +36,33 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const { error } = await client.from("inquiries").insert([data]);
+      const { error } = await client
+        .from("inquiries")
+        .insert([data]);
 
       if (error) throw error;
 
       form.reset();
-      setStatus(status, "Inquiry submitted successfully. We will reply within 24 hours.", "success");
+
+      setStatus(
+        status,
+        "Inquiry submitted successfully. We will reply within 24 hours.",
+        "success"
+      );
+
+      try {
+        await sendInquiryEmail(data);
+      } catch (mailError) {
+        console.warn("Email failed:", mailError);
+      }
     } catch (error) {
       console.log(error);
-      setStatus(status, "Submission failed. Please try again or contact us on WhatsApp.", "error");
+
+      setStatus(
+        status,
+        "Submission failed. Please try again or contact us on WhatsApp.",
+        "error"
+      );
     } finally {
       setLoading(button, false);
     }
@@ -58,4 +82,25 @@ function setStatus(status, message, type) {
 
 function clean(value) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+async function sendInquiryEmail(data) {
+  try {
+    const response = await fetch("/api/send-inquiry-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        ...data,
+        submitted_at: new Date().toLocaleString()
+      })
+    });
+
+    if (!response.ok) {
+      console.warn("Inquiry email notification failed, but Supabase insert succeeded.");
+    }
+  } catch (error) {
+    console.warn("Inquiry email notification failed, but Supabase insert succeeded.", error);
+  }
 }

@@ -37,8 +37,8 @@ form.addEventListener("submit", async (event) => {
     const id = formData.get("id");
     const imageUrl = await resolveImageUrl(formData);
     const videoUrl = await resolveProductVideoUrl(formData);
-    const savedProduct = await saveProduct(formData, imageUrl, videoUrl);
-    await uploadProductGalleryImages(savedProduct.id);
+    const gallery = await resolveGalleryUrls(formData);
+    const savedProduct = await saveProduct(formData, imageUrl, videoUrl, gallery);
     resetForm();
     setStatus(id ? "Product updated." : "Product added.");
     await loadProducts();
@@ -172,7 +172,7 @@ async function resolveProductVideoUrl(formData) {
   return uploadFile(file, config.storageBucket, "product-videos");
 }
 
-async function saveProduct(formData, imageUrl, videoUrl) {
+async function saveProduct(formData, imageUrl, videoUrl, gallery) {
   const id = formData.get("id");
   const payload = {
     name: clean(formData.get("name")),
@@ -186,7 +186,8 @@ async function saveProduct(formData, imageUrl, videoUrl) {
     packaging: clean(formData.get("packaging")),
     lead_time: clean(formData.get("lead_time")),
     features: clean(formData.get("features")),
-    product_video: videoUrl,
+    gallery,
+    video_url: videoUrl,
     status: clean(formData.get("status")) || "published",
     sort_order: Number(formData.get("sort_order") || 0)
   };
@@ -217,34 +218,18 @@ async function saveProduct(formData, imageUrl, videoUrl) {
   return data;
 }
 
-async function uploadProductGalleryImages(productId) {
+async function resolveGalleryUrls(formData) {
   const files = Array.from(document.getElementById("galleryFiles").files || []);
+  const currentGallery = parseGallery(formData.get("current_gallery"));
 
-  if (!files.length) return;
-
-  const { data: existingImages, error: countError } = await client
-    .from("product_images")
-    .select("sort_order")
-    .eq("product_id", productId)
-    .order("sort_order", { ascending: false })
-    .limit(1);
-
-  if (countError) throw countError;
-
-  const startSort = Number(existingImages?.[0]?.sort_order || 0);
-  const rows = [];
+  if (!files.length) return currentGallery;
 
   for (let index = 0; index < files.length; index += 1) {
     const imageUrl = await uploadFile(files[index], config.storageBucket, "product-gallery");
-    rows.push({
-      product_id: productId,
-      image_url: imageUrl,
-      sort_order: startSort + index + 1
-    });
+    currentGallery.push(imageUrl);
   }
 
-  const { error } = await client.from("product_images").insert(rows);
-  if (error) throw error;
+  return currentGallery;
 }
 
 async function loadProducts() {
@@ -306,7 +291,8 @@ function editProduct(product) {
 
   form.id.value = product.id || "";
   form.current_image_url.value = product.image_url || "";
-  form.current_video_url.value = product.product_video || "";
+  form.current_video_url.value = product.video_url || product.product_video || "";
+  form.current_gallery.value = JSON.stringify(normalizeGallery(product.gallery));
   form.remove_product_video.value = "";
   form.name.value = product.name || "";
   form.category.value = product.category || "";
@@ -320,12 +306,12 @@ function editProduct(product) {
   form.short_desc.value = product.short_desc || "";
   form.description.value = product.description || "";
   form.features.value = product.features || "";
-  removeProductVideoButton.hidden = !product.product_video;
-  productVideoStatus.textContent = product.product_video ? "Product video attached." : "";
+  removeProductVideoButton.hidden = !(product.video_url || product.product_video);
+  productVideoStatus.textContent = (product.video_url || product.product_video) ? "Product video attached." : "";
   submitButton.textContent = "Update Product";
   cancelEditButton.hidden = false;
   setStatus("Editing product.");
-  loadProductGallery(product.id);
+  renderProductGallery(normalizeGallery(product.gallery));
 }
 
 async function deleteProduct(product) {
@@ -336,6 +322,7 @@ async function deleteProduct(product) {
   if (!confirmed) return;
 
   setStatus("Deleting product...");
+  await deleteProductStorageFiles(product);
   const { error } = await client
     .from(config.productsTable)
     .delete()
@@ -350,21 +337,35 @@ async function deleteProduct(product) {
   await loadProducts();
 }
 
-async function loadProductGallery(productId) {
-  productGalleryList.innerHTML = "<p>Loading gallery...</p>";
+async function deleteProductStorageFiles(product) {
+  const urls = [
+    product.image_url,
+    ...(normalizeGallery(product.gallery)),
+    product.video_url
+  ].filter(Boolean);
 
+  const paths = [...new Set(urls.map((url) => storagePathFromPublicUrl(url)).filter(Boolean))];
+
+  if (!paths.length) return;
+
+  const { error } = await client.storage.from(config.storageBucket).remove(paths);
+
+  if (error) {
+    console.log("Storage cleanup failed:", error);
+  }
+}
+
+function storagePathFromPublicUrl(url) {
   try {
-    const { data, error } = await client
-      .from("product_images")
-      .select("*")
-      .eq("product_id", productId)
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: true });
+    const parsed = new URL(url);
+    const marker = `/storage/v1/object/public/${config.storageBucket}/`;
+    const index = parsed.pathname.indexOf(marker);
 
-    if (error) throw error;
-    renderProductGallery(data || []);
-  } catch (error) {
-    productGalleryList.innerHTML = `<p>${escapeHtml(error.message)}</p>`;
+    if (index === -1) return "";
+
+    return decodeURIComponent(parsed.pathname.slice(index + marker.length));
+  } catch {
+    return "";
   }
 }
 
@@ -374,34 +375,35 @@ function renderProductGallery(images) {
     return;
   }
 
-  productGalleryList.innerHTML = images.map((image) => `
+  productGalleryList.innerHTML = images.map((image, index) => `
     <article class="gallery-manage-item">
-      <img src="${escapeAttribute(image.image_url)}" alt="">
-      <input type="number" value="${Number(image.sort_order || 0)}" data-action="sort" data-id="${escapeAttribute(image.id)}">
-      <button type="button" data-action="main" data-url="${escapeAttribute(image.image_url)}">Set Main</button>
-      <button type="button" data-action="delete" data-id="${escapeAttribute(image.id)}">Delete</button>
+      <img src="${escapeAttribute(image)}" alt="">
+      <input type="number" value="${index + 1}" data-action="sort" data-index="${index}">
+      <button type="button" data-action="main" data-url="${escapeAttribute(image)}">Set Main</button>
+      <button type="button" data-action="delete" data-index="${index}">Delete</button>
     </article>
   `).join("");
 
   productGalleryList.querySelectorAll("input").forEach((input) => {
-    input.addEventListener("change", () => updateGallerySort(input.dataset.id, input.value));
+    input.addEventListener("change", () => updateGallerySort(input.dataset.index, input.value));
   });
 
   productGalleryList.querySelectorAll("button").forEach((button) => {
     button.addEventListener("click", () => {
       if (button.dataset.action === "main") setMainProductImage(button.dataset.url);
-      if (button.dataset.action === "delete") deleteGalleryImage(button.dataset.id);
+      if (button.dataset.action === "delete") deleteGalleryImage(button.dataset.index);
     });
   });
 }
 
-async function updateGallerySort(id, sortOrder) {
-  const { error } = await client
-    .from("product_images")
-    .update({ sort_order: Number(sortOrder || 0) })
-    .eq("id", id);
+function updateGallerySort(index, sortOrder) {
+  const gallery = parseGallery(form.current_gallery.value);
+  const [item] = gallery.splice(Number(index), 1);
+  const target = Math.max(0, Math.min(gallery.length, Number(sortOrder || 1) - 1));
 
-  if (error) window.alert(error.message || "Failed to update image sort.");
+  gallery.splice(target, 0, item);
+  form.current_gallery.value = JSON.stringify(gallery);
+  renderProductGallery(gallery);
 }
 
 async function setMainProductImage(imageUrl) {
@@ -424,19 +426,15 @@ async function setMainProductImage(imageUrl) {
   await loadProducts();
 }
 
-async function deleteGalleryImage(id) {
+function deleteGalleryImage(index) {
   const confirmed = window.confirm("Delete this gallery image?");
 
   if (!confirmed) return;
 
-  const { error } = await client.from("product_images").delete().eq("id", id);
-
-  if (error) {
-    window.alert(error.message || "Failed to delete gallery image.");
-    return;
-  }
-
-  await loadProductGallery(form.id.value);
+  const gallery = parseGallery(form.current_gallery.value);
+  gallery.splice(Number(index), 1);
+  form.current_gallery.value = JSON.stringify(gallery);
+  renderProductGallery(gallery);
 }
 
 async function resolveCategoryImageUrl(formData) {
@@ -444,8 +442,7 @@ async function resolveCategoryImageUrl(formData) {
   const currentImageUrl = formData.get("current_image_url");
 
   if (!file) {
-    if (currentImageUrl) return currentImageUrl;
-    throw new Error("Please choose a category image.");
+    return currentImageUrl || "";
   }
 
   return uploadFile(file, config.storageBucket, "categories");
@@ -453,17 +450,21 @@ async function resolveCategoryImageUrl(formData) {
 
 async function saveCategory(formData, imageUrl) {
   const id = formData.get("id");
+  const name = clean(formData.get("name"));
+  const slug = clean(formData.get("slug")) || slugify(name);
+  const link = clean(formData.get("link")) || `product.html?category=${encodeURIComponent(slug || name)}`;
   const payload = {
-    title: clean(formData.get("title")),
+    name,
+    slug,
     image_url: imageUrl,
     description: clean(formData.get("description")),
-    link: clean(formData.get("link")) || "product.html",
+    link,
     sort_order: Number(formData.get("sort_order") || 0),
     status: clean(formData.get("status")) || "published"
   };
 
-  if (!payload.title) {
-    throw new Error("Category title is required.");
+  if (!payload.name) {
+    throw new Error("Category name is required.");
   }
 
   if (id) {
@@ -503,10 +504,11 @@ function renderCategories(categories) {
     <article class="admin-product">
       <img src="${escapeAttribute(category.image_url || "")}" alt="">
       <div>
-        <h3>${escapeHtml(category.title || "Untitled Category")}</h3>
+        <h3>${escapeHtml(category.name || "Untitled Category")}</h3>
+        <p>${escapeHtml(category.slug || "")}</p>
         <p>${escapeHtml(category.description || "")}</p>
         <p>${escapeHtml(category.link || "")}</p>
-        <span class="status-pill">${escapeHtml(category.status || "draft")}</span>
+        <span class="status-pill">${escapeHtml(category.status || "hidden")}</span>
       </div>
       <div class="admin-product-actions">
         <button type="button" data-action="edit" data-id="${escapeAttribute(category.id)}">Edit</button>
@@ -530,11 +532,12 @@ function editCategory(category) {
 
   categoryForm.id.value = category.id || "";
   categoryForm.current_image_url.value = category.image_url || "";
-  categoryForm.title.value = category.title || "";
+  categoryForm.name.value = category.name || "";
+  categoryForm.slug.value = category.slug || slugify(category.name || "");
   categoryForm.description.value = category.description || "";
   categoryForm.link.value = category.link || "";
   categoryForm.sort_order.value = category.sort_order || 0;
-  categoryForm.status.value = category.status || "published";
+  categoryForm.status.value = category.status === "draft" ? "hidden" : category.status || "published";
   categorySubmitButton.textContent = "Update Category";
   cancelCategoryEditButton.hidden = false;
   categoryStatus.textContent = "Editing category.";
@@ -543,7 +546,7 @@ function editCategory(category) {
 async function deleteCategory(category) {
   if (!category) return;
 
-  const confirmed = window.confirm(`Delete ${category.title || "this category"}?`);
+  const confirmed = window.confirm(`Delete ${category.name || "this category"}?`);
   if (!confirmed) return;
 
   const { error } = await client.from("categories").delete().eq("id", category.id);
@@ -826,6 +829,7 @@ function resetForm() {
   form.id.value = "";
   form.current_image_url.value = "";
   form.current_video_url.value = "";
+  form.current_gallery.value = "";
   form.remove_product_video.value = "";
   productGalleryList.innerHTML = "";
   productVideoStatus.textContent = "";
@@ -845,6 +849,33 @@ function setButtonBusy(button, isBusy) {
 
 function clean(value) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function slugify(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function parseGallery(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (!value) return [];
+
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+  } catch {
+    return String(value)
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+}
+
+function normalizeGallery(value) {
+  return parseGallery(value);
 }
 
 function setStatus(message) {

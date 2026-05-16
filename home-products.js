@@ -13,27 +13,32 @@ async function loadHomeCategories() {
     const client = supabase.createClient(config.url, config.key);
     const { data, error } = await client
       .from("categories")
-      .select("id,title,image_url,description,link,status,sort_order")
+      .select("*")
       .eq("status", "published")
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false })
       .limit(6);
 
     if (error) throw error;
-    if (!data || !data.length) return;
 
-    grid.innerHTML = data.map((product) => `
+    grid.innerHTML = (data || []).map((category) => {
+      const name = category.name || "XiQi Category";
+      const slug = category.slug || slugify(name);
+      const link = category.link || `product.html?category=${encodeURIComponent(slug)}`;
+
+      return `
       <div class="category-card">
-        <img src="${escapeAttribute(product.image_url || "")}" alt="${escapeAttribute(product.title || "XiQi Category")}">
+        <img src="${escapeAttribute(category.image_url || "logo.png")}" alt="${escapeAttribute(name)}">
         <div class="category-info">
-          <h3>${escapeHtml(product.title || "XiQi Category")}</h3>
-          <p>${escapeHtml(product.description || "")}</p>
-          <a href="${escapeAttribute(product.link || "product.html")}" class="product-link">
+          <h3>${escapeHtml(name)}</h3>
+          <p>${escapeHtml(category.description || "")}</p>
+          <a href="${escapeAttribute(link)}" class="product-link">
             View Details
           </a>
         </div>
       </div>
-    `).join("");
+    `;
+    }).join("");
   } catch (error) {
     console.log("Home categories unavailable, using static cards.", error);
   }
@@ -86,4 +91,12 @@ function escapeHtml(value) {
 
 function escapeAttribute(value) {
   return escapeHtml(value).replaceAll("`", "&#096;");
+}
+
+function slugify(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }

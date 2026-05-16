@@ -29,6 +29,7 @@
         <input type="hidden" name="id">
         <input type="hidden" name="current_image_url">
         <input type="hidden" name="current_video_url">
+        <input type="hidden" name="current_gallery">
         <input type="hidden" name="remove_product_video" value="">
 
         <div class="form-grid">
@@ -146,13 +147,13 @@
 
         <div class="form-grid">
           <label>
-            Category Title
-            <input type="text" name="title" required>
+            Category Name
+            <input type="text" name="name" required placeholder="Phone Cases">
           </label>
 
           <label>
-            Link
-            <input type="text" name="link" placeholder="product.html?category=phone-case">
+            Slug
+            <input type="text" name="slug" placeholder="phone-cases">
           </label>
 
           <label>
@@ -164,7 +165,7 @@
             Status
             <select name="status">
               <option value="published">Published</option>
-              <option value="draft">Hidden</option>
+              <option value="hidden">Hidden</option>
             </select>
           </label>
         </div>
@@ -175,7 +176,12 @@
         </label>
 
         <label>
-          Category Image
+          Link
+          <input type="text" name="link" placeholder="product.html?category=phone-cases">
+        </label>
+
+        <label>
+          Category Image Optional
           <input type="file" id="categoryImageFile" accept="image/*">
         </label>
 
