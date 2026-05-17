@@ -813,21 +813,25 @@ function renderInquiries(inquiries) {
     </article>
   `).join("");
 
-  inquiryList.querySelectorAll("button").forEach((button) => {
-    button.addEventListener("click", () => {
-      const inquiry = inquiries.find((item) => item.id === button.dataset.id);
+document.querySelectorAll('[data-action="delete"]').forEach((button) => {
+    button.onclick = async () => {
+        const inquiryId = button.dataset.id;
 
-      if (button.dataset.action === "view") {
-        toggleInquiryDetail(button);
-      }
+        console.log("Deleting:", inquiryId);
 
-      if (button.dataset.action === "delete") {
-    console.log("delete clicked", inquiry);
+        const { error } = await client
+            .from("inquiries")
+            .delete()
+            .eq("id", inquiryId);
 
-    deleteInquiry(inquiry);
-}
-    });
-  });
+        if (error) {
+            alert(error.message);
+            return;
+        }
+
+        button.closest(".admin-inquiry")?.remove();
+    };
+});
 
   inquiryList.querySelectorAll(".inquiry-status-select").forEach((select) => {
     select.addEventListener("change", () => {
