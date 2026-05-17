@@ -22,6 +22,8 @@ const productVideoStatus = document.getElementById("productVideoStatus");
 const cancelEditButton = document.getElementById("cancelEdit");
 const submitButton = form.querySelector('button[type="submit"]');
 const client = window.XIQI_ADMIN_CLIENT;
+const config = window.XIQI_CONFIG;
+
 let adminSession = null;
 
 async function ensureAdminSession() {
