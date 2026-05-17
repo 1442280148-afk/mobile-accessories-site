@@ -36,6 +36,14 @@ loginForm.addEventListener("submit", async (event) => {
       refresh_token: data.session.refresh_token
     });
 
+    const {
+      data: { session }
+    } = await client.auth.getSession();
+
+    if (!session) {
+      throw new Error("Supabase session was not saved. Please try again.");
+    }
+
     window.location.href = "admin.html";
   } catch (error) {
     loginStatus.textContent = error.message || "Login failed.";

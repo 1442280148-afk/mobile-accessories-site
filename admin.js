@@ -21,36 +21,19 @@ const removeProductVideoButton = document.getElementById("removeProductVideo");
 const productVideoStatus = document.getElementById("productVideoStatus");
 const cancelEditButton = document.getElementById("cancelEdit");
 const submitButton = form.querySelector('button[type="submit"]');
-const config = window.XIQI_SUPABASE;
-let client = window.XIQI_ADMIN_CLIENT || createSupabaseAdminClient();
+const client = window.XIQI_ADMIN_CLIENT;
 let adminSession = null;
 
-function createSupabaseAdminClient(session) {
-  const options = {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true
-    }
-  };
-
-  if (session?.access_token) {
-    options.global = {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`
-      }
-    };
+async function ensureAdminSession() {
+  if (!client) {
+    window.location.href = "admin-login.html";
+    throw new Error("Authenticated Supabase client is not available.");
   }
 
-  return supabase.createClient(config.url, config.key, options);
-}
-
-async function ensureAdminSession() {
-  const authClient = window.XIQI_ADMIN_CLIENT || client;
   const {
     data: { session },
     error
-  } = await authClient.auth.getSession();
+  } = await client.auth.getSession();
 
   if (error || !session) {
     window.location.href = "admin-login.html";
@@ -59,12 +42,13 @@ async function ensureAdminSession() {
 
   adminSession = session;
   window.XIQI_ADMIN_SESSION = session;
-  client = createSupabaseAdminClient(session);
 
   await client.auth.setSession({
     access_token: session.access_token,
     refresh_token: session.refresh_token
   });
+
+  console.log("Supabase admin role:", getJwtRole(session.access_token), session.user?.email || "unknown");
 
   return adminSession;
 }
@@ -976,6 +960,15 @@ function normalizeGallery(value) {
 
 function setStatus(message) {
   statusText.textContent = message;
+}
+
+function getJwtRole(accessToken) {
+  try {
+    const payload = JSON.parse(atob(accessToken.split(".")[1]));
+    return payload.role || "unknown";
+  } catch {
+    return "unknown";
+  }
 }
 
 function escapeHtml(value) {
