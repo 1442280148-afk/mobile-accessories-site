@@ -822,8 +822,10 @@ function renderInquiries(inquiries) {
       }
 
       if (button.dataset.action === "delete") {
-        deleteInquiry(inquiry);
-      }
+    console.log("delete clicked", inquiry);
+
+    deleteInquiry(inquiry);
+}
     });
   });
 
