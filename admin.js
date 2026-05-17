@@ -182,6 +182,7 @@ async function resolveImageUrl(formData) {
 
 async function uploadImage(file) {
   await ensureAdminSession();
+  const config = getAdminConfig();
 
   const ext = file.name.match(/\.[a-z0-9]+$/i)?.[0] || "";
   const filename = `${Date.now()}-${crypto.randomUUID()}${ext}`;
@@ -221,6 +222,7 @@ async function uploadFile(file, bucket, folder) {
 }
 
 async function resolveProductVideoUrl(formData) {
+  const config = getAdminConfig();
   const file = document.getElementById("productVideoFile").files[0];
 
   if (formData.get("remove_product_video") === "1") {
@@ -236,6 +238,7 @@ async function resolveProductVideoUrl(formData) {
 
 async function saveProduct(formData, imageUrl, videoUrl, gallery) {
   await ensureAdminSession();
+  const config = getAdminConfig();
 
   const id = formData.get("id");
   const payload = {
@@ -283,6 +286,7 @@ async function saveProduct(formData, imageUrl, videoUrl, gallery) {
 }
 
 async function resolveGalleryUrls(formData) {
+  const config = getAdminConfig();
   const files = Array.from(document.getElementById("galleryFiles").files || []);
   const currentGallery = parseGallery(formData.get("current_gallery"));
 
@@ -298,6 +302,7 @@ async function resolveGalleryUrls(formData) {
 
 async function loadProducts() {
   await ensureAdminSession();
+  const config = getAdminConfig();
 
   productList.innerHTML = "<p>Loading products...</p>";
 
@@ -382,6 +387,7 @@ function editProduct(product) {
 
 async function deleteProduct(product) {
   await ensureAdminSession();
+  const config = getAdminConfig();
 
   if (!product) return;
 
@@ -406,6 +412,7 @@ async function deleteProduct(product) {
 }
 
 async function deleteProductStorageFiles(product) {
+  const config = getAdminConfig();
   const urls = [
     product.image_url,
     ...(normalizeGallery(product.gallery)),
@@ -424,6 +431,8 @@ async function deleteProductStorageFiles(product) {
 }
 
 function storagePathFromPublicUrl(url) {
+  const config = getAdminConfig();
+
   try {
     const parsed = new URL(url);
     const marker = `/storage/v1/object/public/${config.storageBucket}/`;
@@ -476,6 +485,7 @@ function updateGallerySort(index, sortOrder) {
 
 async function setMainProductImage(imageUrl) {
   await ensureAdminSession();
+  const config = getAdminConfig();
 
   const productId = form.id.value;
 
@@ -508,6 +518,7 @@ function deleteGalleryImage(index) {
 }
 
 async function resolveCategoryImageUrl(formData) {
+  const config = getAdminConfig();
   const file = document.getElementById("categoryImageFile").files[0];
   const currentImageUrl = formData.get("current_image_url");
 
@@ -977,6 +988,16 @@ function normalizeGallery(value) {
 
 function setStatus(message) {
   statusText.textContent = message;
+}
+
+function getAdminConfig() {
+  const config = window.XIQI_CONFIG;
+
+  if (!config) {
+    throw new Error("XIQI_CONFIG missing. Please check supabase-config.js loading order.");
+  }
+
+  return config;
 }
 
 function showBlockingAdminError(message) {
