@@ -813,25 +813,19 @@ function renderInquiries(inquiries) {
     </article>
   `).join("");
 
-document.querySelectorAll('[data-action="delete"]').forEach((button) => {
-    button.onclick = async () => {
-        const inquiryId = button.dataset.id;
+  inquiryList.querySelectorAll('button[data-action="view"]').forEach((button) => {
+    button.addEventListener("click", () => {
+      toggleInquiryDetail(button);
+    });
+  });
 
-        console.log("Deleting:", inquiryId);
-
-        const { error } = await client
-            .from("inquiries")
-            .delete()
-            .eq("id", inquiryId);
-
-        if (error) {
-            alert(error.message);
-            return;
-        }
-
-        button.closest(".admin-inquiry")?.remove();
-    };
-});
+  inquiryList.querySelectorAll('button[data-action="delete"]').forEach((button) => {
+    button.addEventListener("click", () => {
+      console.log("delete button clicked");
+      const inquiry = inquiries.find((item) => String(item.id) === String(button.dataset.id));
+      deleteInquiry(inquiry);
+    });
+  });
 
   inquiryList.querySelectorAll(".inquiry-status-select").forEach((select) => {
     select.addEventListener("change", () => {
@@ -891,16 +885,21 @@ async function deleteInquiry(inquiry) {
 
   if (!confirmed) return;
 
-  const { error } = await client
+  console.log("deleting inquiry id", inquiry.id);
+
+  const { data, error } = await client
     .from("inquiries")
     .delete()
-    .eq("id", inquiry.id);
+    .eq("id", inquiry.id)
+    .select();
 
   if (error) {
+    console.log("delete error", error);
     window.alert(error.message || "Failed to delete inquiry.");
     return;
   }
 
+  console.log("delete success", data);
   await loadInquiries();
 }
 
