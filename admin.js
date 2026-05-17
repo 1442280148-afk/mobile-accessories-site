@@ -23,6 +23,40 @@ const cancelEditButton = document.getElementById("cancelEdit");
 const submitButton = form.querySelector('button[type="submit"]');
 const config = window.XIQI_SUPABASE;
 const client = supabase.createClient(config.url, config.key);
+let adminSession = null;
+
+async function ensureAdminSession() {
+  const { data, error } = await client.auth.getSession();
+  const session = data?.session;
+
+  if (error || !session) {
+    window.location.href = "admin-login.html";
+    throw new Error("Admin login required.");
+  }
+
+  adminSession = session;
+
+  await client.auth.setSession({
+    access_token: session.access_token,
+    refresh_token: session.refresh_token
+  });
+
+  return adminSession;
+}
+
+async function initAdmin() {
+  try {
+    await ensureAdminSession();
+    await Promise.all([
+      loadProducts(),
+      loadCategories(),
+      loadFactoryVideos(),
+      loadInquiries()
+    ]);
+  } catch (error) {
+    console.warn(error.message || "Admin session unavailable.");
+  }
+}
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -33,6 +67,7 @@ form.addEventListener("submit", async (event) => {
   setStatus("Saving product...");
 
   try {
+    await ensureAdminSession();
     const formData = new FormData(form);
     const id = formData.get("id");
     const imageUrl = await resolveImageUrl(formData);
@@ -72,6 +107,7 @@ categoryForm.addEventListener("submit", async (event) => {
   categoryStatus.textContent = "Saving category...";
 
   try {
+    await ensureAdminSession();
     const formData = new FormData(categoryForm);
     const id = formData.get("id");
     const imageUrl = await resolveCategoryImageUrl(formData);
@@ -95,6 +131,7 @@ factoryForm.addEventListener("submit", async (event) => {
   factoryStatus.textContent = "Saving video...";
 
   try {
+    await ensureAdminSession();
     const formData = new FormData(factoryForm);
     const id = formData.get("id");
     const videoUrl = await resolveFactoryVideoUrl(formData);
@@ -123,6 +160,8 @@ async function resolveImageUrl(formData) {
 }
 
 async function uploadImage(file) {
+  await ensureAdminSession();
+
   const ext = file.name.match(/\.[a-z0-9]+$/i)?.[0] || "";
   const filename = `${Date.now()}-${crypto.randomUUID()}${ext}`;
   const { error } = await client.storage
@@ -141,6 +180,8 @@ async function uploadImage(file) {
 }
 
 async function uploadFile(file, bucket, folder) {
+  await ensureAdminSession();
+
   const ext = file.name.match(/\.[a-z0-9]+$/i)?.[0] || "";
   const filename = `${folder}/${Date.now()}-${crypto.randomUUID()}${ext}`;
   const { error } = await client.storage
@@ -173,6 +214,8 @@ async function resolveProductVideoUrl(formData) {
 }
 
 async function saveProduct(formData, imageUrl, videoUrl, gallery) {
+  await ensureAdminSession();
+
   const id = formData.get("id");
   const payload = {
     name: clean(formData.get("name")),
@@ -233,6 +276,8 @@ async function resolveGalleryUrls(formData) {
 }
 
 async function loadProducts() {
+  await ensureAdminSession();
+
   productList.innerHTML = "<p>Loading products...</p>";
 
   try {
@@ -315,6 +360,8 @@ function editProduct(product) {
 }
 
 async function deleteProduct(product) {
+  await ensureAdminSession();
+
   if (!product) return;
 
   const confirmed = window.confirm(`Delete ${product.name || "this product"}?`);
@@ -407,6 +454,8 @@ function updateGallerySort(index, sortOrder) {
 }
 
 async function setMainProductImage(imageUrl) {
+  await ensureAdminSession();
+
   const productId = form.id.value;
 
   if (!productId) return;
@@ -449,6 +498,8 @@ async function resolveCategoryImageUrl(formData) {
 }
 
 async function saveCategory(formData, imageUrl) {
+  await ensureAdminSession();
+
   const id = formData.get("id");
   const name = clean(formData.get("name"));
   const slug = clean(formData.get("slug")) || slugify(name);
@@ -478,6 +529,8 @@ async function saveCategory(formData, imageUrl) {
 }
 
 async function loadCategories() {
+  await ensureAdminSession();
+
   categoryList.innerHTML = "<p>Loading categories...</p>";
 
   try {
@@ -544,6 +597,8 @@ function editCategory(category) {
 }
 
 async function deleteCategory(category) {
+  await ensureAdminSession();
+
   if (!category) return;
 
   const confirmed = window.confirm(`Delete ${category.name || "this category"}?`);
@@ -581,6 +636,8 @@ async function resolveFactoryVideoUrl(formData) {
 }
 
 async function saveFactoryVideo(formData, videoUrl) {
+  await ensureAdminSession();
+
   const id = formData.get("id");
   const payload = {
     title: clean(formData.get("title")),
@@ -605,6 +662,8 @@ async function saveFactoryVideo(formData, videoUrl) {
 }
 
 async function loadFactoryVideos() {
+  await ensureAdminSession();
+
   factoryVideoList.innerHTML = "<p>Loading videos...</p>";
 
   try {
@@ -667,6 +726,8 @@ function editFactoryVideo(video) {
 }
 
 async function deleteFactoryVideo(video) {
+  await ensureAdminSession();
+
   if (!video) return;
 
   const confirmed = window.confirm(`Delete ${video.title || "this video"}?`);
@@ -692,6 +753,8 @@ function resetFactoryForm() {
 }
 
 async function loadInquiries() {
+  await ensureAdminSession();
+
   inquiryList.innerHTML = "<p>Loading inquiries...</p>";
 
   try {
@@ -787,6 +850,8 @@ function toggleInquiryDetail(button) {
 }
 
 async function updateInquiryStatus(id, status) {
+  await ensureAdminSession();
+
   const { error } = await client
     .from("inquiries")
     .update({ status })
@@ -799,6 +864,8 @@ async function updateInquiryStatus(id, status) {
 }
 
 async function deleteInquiry(inquiry) {
+  await ensureAdminSession();
+
   if (!inquiry) return;
 
   const confirmed = window.confirm(`Delete inquiry from ${inquiry.name || "this customer"}?`);
@@ -895,7 +962,4 @@ function escapeAttribute(value) {
   return escapeHtml(value).replaceAll("`", "&#096;");
 }
 
-loadProducts();
-loadCategories();
-loadFactoryVideos();
-loadInquiries();
+initAdmin();
