@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
 
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
-  const notifyTo = process.env.RECEIVE_EMAIL || smtpUser;
+  const notifyTo = process.env.SMTP_TO || smtpUser;
 
   if (!smtpUser || !smtpPass) {
     res.status(500).json({ error: "SMTP environment variables are not configured." });
@@ -42,13 +42,9 @@ module.exports = async function handler(req, res) {
 
     res.status(200).json({ ok: true });
   } catch (error) {
-  console.error("MAIL ERROR:", error);
-
-  res.status(500).json({
-    error: error.message,
-    stack: error.stack
-  });
-}
+    console.error(error);
+    res.status(500).json({ error: "Failed to send inquiry email." });
+  }
 };
 
 function buildTextEmail(inquiry, submittedAt) {

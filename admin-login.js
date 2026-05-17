@@ -2,7 +2,13 @@ const loginForm = document.getElementById("loginForm");
 const loginStatus = document.getElementById("loginStatus");
 const loginButton = loginForm.querySelector('button[type="submit"]');
 const config = window.XIQI_SUPABASE;
-const client = supabase.createClient(config.url, config.key);
+const client = supabase.createClient(config.url, config.key, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  }
+});
 
 checkExistingSession();
 
@@ -17,12 +23,18 @@ loginForm.addEventListener("submit", async (event) => {
   const password = String(formData.get("password") || "");
 
   try {
-    const { error } = await client.auth.signInWithPassword({
+    const { data, error } = await client.auth.signInWithPassword({
       email,
       password
     });
 
     if (error) throw error;
+    if (!data.session) throw new Error("Login succeeded but no Supabase session was returned.");
+
+    await client.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token
+    });
 
     window.location.href = "admin.html";
   } catch (error) {

@@ -4,7 +4,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function protectAdminPage() {
   const config = window.XIQI_SUPABASE;
-  const client = supabase.createClient(config.url, config.key);
+  const client = supabase.createClient(config.url, config.key, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
   const { data } = await client.auth.getSession();
 
   if (!data.session) {
@@ -12,6 +18,8 @@ async function protectAdminPage() {
     return;
   }
 
+  window.XIQI_ADMIN_CLIENT = client;
+  window.XIQI_ADMIN_SESSION = data.session;
   document.body.classList.add("admin-authenticated");
   loadAdminScript();
 

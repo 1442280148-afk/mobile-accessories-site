@@ -22,12 +22,35 @@ const productVideoStatus = document.getElementById("productVideoStatus");
 const cancelEditButton = document.getElementById("cancelEdit");
 const submitButton = form.querySelector('button[type="submit"]');
 const config = window.XIQI_SUPABASE;
-const client = supabase.createClient(config.url, config.key);
+let client = window.XIQI_ADMIN_CLIENT || createSupabaseAdminClient();
 let adminSession = null;
 
+function createSupabaseAdminClient(session) {
+  const options = {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  };
+
+  if (session?.access_token) {
+    options.global = {
+      headers: {
+        Authorization: `Bearer ${session.access_token}`
+      }
+    };
+  }
+
+  return supabase.createClient(config.url, config.key, options);
+}
+
 async function ensureAdminSession() {
-  const { data, error } = await client.auth.getSession();
-  const session = data?.session;
+  const authClient = window.XIQI_ADMIN_CLIENT || client;
+  const {
+    data: { session },
+    error
+  } = await authClient.auth.getSession();
 
   if (error || !session) {
     window.location.href = "admin-login.html";
@@ -35,6 +58,8 @@ async function ensureAdminSession() {
   }
 
   adminSession = session;
+  window.XIQI_ADMIN_SESSION = session;
+  client = createSupabaseAdminClient(session);
 
   await client.auth.setSession({
     access_token: session.access_token,
@@ -624,6 +649,9 @@ function resetCategoryForm() {
 }
 
 async function resolveFactoryVideoUrl(formData) {
+  const session = await ensureAdminSession();
+  console.log("Authenticated factory video user:", session.user?.email || "unknown");
+
   const file = document.getElementById("factoryVideoFile").files[0];
   const currentVideoUrl = formData.get("current_video_url");
 
@@ -636,7 +664,8 @@ async function resolveFactoryVideoUrl(formData) {
 }
 
 async function saveFactoryVideo(formData, videoUrl) {
-  await ensureAdminSession();
+  const session = await ensureAdminSession();
+  console.log("Authenticated factory media user:", session.user?.email || "unknown");
 
   const id = formData.get("id");
   const payload = {
