@@ -1,3 +1,16 @@
+const config = window.XIQI_CONFIG;
+const client = window.XIQI_ADMIN_CLIENT;
+
+if (!config) {
+  showBlockingAdminError("XIQI_CONFIG missing. Please check supabase-config.js loading order.");
+  throw new Error("XIQI_CONFIG missing. Please check supabase-config.js loading order.");
+}
+
+if (!client) {
+  showBlockingAdminError("Authenticated Supabase client missing. Please check admin-auth.js loading order.");
+  throw new Error("Authenticated Supabase client missing. Please check admin-auth.js loading order.");
+}
+
 const form = document.getElementById("productForm");
 const statusText = document.getElementById("formStatus");
 const productList = document.getElementById("productList");
@@ -21,9 +34,6 @@ const removeProductVideoButton = document.getElementById("removeProductVideo");
 const productVideoStatus = document.getElementById("productVideoStatus");
 const cancelEditButton = document.getElementById("cancelEdit");
 const submitButton = form.querySelector('button[type="submit"]');
-const client = window.XIQI_ADMIN_CLIENT;
-const config = window.XIQI_CONFIG;
-
 let adminSession = null;
 
 async function ensureAdminSession() {
@@ -969,6 +979,12 @@ function setStatus(message) {
   statusText.textContent = message;
 }
 
+function showBlockingAdminError(message) {
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.insertAdjacentHTML("afterbegin", `<div style="padding:16px;color:#b91c1c;background:#fee2e2;font-weight:700">${message}</div>`);
+  });
+}
+
 function getJwtRole(accessToken) {
   try {
     const payload = JSON.parse(atob(accessToken.split(".")[1]));
@@ -991,4 +1007,8 @@ function escapeAttribute(value) {
   return escapeHtml(value).replaceAll("`", "&#096;");
 }
 
-initAdmin();
+window.XIQI_ADMIN_READY
+  .then(() => initAdmin())
+  .catch((error) => {
+    console.warn(error.message || "Admin authentication failed.");
+  });
