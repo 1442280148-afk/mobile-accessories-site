@@ -3,7 +3,12 @@ async function loadRelatedProducts(currentProduct) {
 
   if (!container || !currentProduct) return;
 
+  container.classList.add("is-loading");
+  container.setAttribute("aria-busy", "true");
+
   if (!currentProduct.category) {
+    container.classList.remove("is-loading");
+    container.setAttribute("aria-busy", "false");
     container.innerHTML = '<p class="related-products-message">No related products found.</p>';
     return;
   }
@@ -27,6 +32,9 @@ async function loadRelatedProducts(currentProduct) {
   } catch (error) {
     console.error("Failed to load related products.", error);
     container.innerHTML = '<p class="related-products-message">Failed to load related products.</p>';
+  } finally {
+    container.classList.remove("is-loading");
+    container.setAttribute("aria-busy", "false");
   }
 }
 

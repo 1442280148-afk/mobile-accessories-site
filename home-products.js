@@ -8,6 +8,8 @@ async function loadHomeCategories() {
 
   if (!grid) return;
 
+  setLoadingState(grid, true);
+
   try {
     const config = window.XIQI_SUPABASE;
     const client = supabase.createClient(config.url, config.key);
@@ -23,13 +25,17 @@ async function loadHomeCategories() {
 
     renderCategories(grid, data || []);
   } catch (error) {
-    console.warn("Home categories unavailable, keeping static cards.", error);
+    console.warn("Home categories unavailable.", error);
+    renderCategoryEmptyState(grid);
+  } finally {
+    setLoadingState(grid, false);
   }
 }
 
 function renderCategories(container, categories) {
   try {
     if (!Array.isArray(categories) || !categories.length) {
+      renderCategoryEmptyState(container);
       return;
     }
 
@@ -45,13 +51,29 @@ function renderCategories(container, categories) {
       .filter(Boolean);
 
     if (!cards.length) {
+      renderCategoryEmptyState(container);
       return;
     }
 
     container.innerHTML = cards.join("");
   } catch (error) {
-    console.warn("Category render failed, keeping static cards.", error);
+    console.warn("Category render failed.", error);
+    renderCategoryEmptyState(container);
   }
+}
+
+function renderCategoryEmptyState(container) {
+  container.innerHTML = `
+    <div class="product-empty-state">
+      <h3>No categories found</h3>
+      <p>Please check back soon for updated product categories.</p>
+    </div>
+  `;
+}
+
+function setLoadingState(element, isLoading) {
+  element.classList.toggle("is-loading", isLoading);
+  element.setAttribute("aria-busy", String(isLoading));
 }
 
 function renderCategoryCard(category) {

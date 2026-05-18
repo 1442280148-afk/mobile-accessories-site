@@ -24,10 +24,10 @@ async function loadProductGrid() {
 
   if (!grid) return;
 
+  setLoadingState(grid, true);
+
   try {
     const products = await fetchProducts();
-
-    if (!products.length) return;
 
     productGridState.products = products;
     await loadFilterCategories();
@@ -35,7 +35,10 @@ async function loadProductGrid() {
     applyInitialCategoryFilter();
     renderFilteredProducts();
   } catch (error) {
-    console.log("Product API unavailable, using static products.", error);
+    console.log("Product API unavailable.", error);
+    renderProductLoadError(grid);
+  } finally {
+    setLoadingState(grid, false);
   }
 }
 
@@ -182,10 +185,17 @@ async function loadProductDetail() {
 
   if (!detailPage) return;
 
+  setLoadingState(detailPage, true);
+
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
-  if (!id) return;
+  if (!id) {
+    renderProductDetailMessage(detailPage, "Product not found", "Please choose a product from the products page.");
+    setLoadingState(detailPage, false);
+    clearRelatedProducts();
+    return;
+  }
 
   try {
     const { data, error } = await client
@@ -198,7 +208,11 @@ async function loadProductDetail() {
 
     renderProductDetail(data);
   } catch (error) {
-    console.log("Supabase product detail unavailable, using static detail.", error);
+    console.log("Supabase product detail unavailable.", error);
+    renderProductDetailMessage(detailPage, "Product not available", "Please return to the products page and choose another item.");
+    clearRelatedProducts();
+  } finally {
+    setLoadingState(detailPage, false);
   }
 }
 
@@ -216,72 +230,70 @@ async function fetchProducts() {
 }
 
 function renderProductDetail(product) {
-  const mainImage = document.querySelector(".detail-main-image img");
-  const gallery = document.querySelector(".detail-gallery");
-  const tag = document.querySelector(".detail-tag");
-  const title = document.querySelector(".detail-right h1");
-  const desc = document.querySelector(".detail-desc");
-  const features = document.querySelector(".detail-features");
-  const info = document.querySelector(".detail-info");
+  const detailPage = document.querySelector(".detail-page");
   const videoSection = document.querySelector(".product-video-section");
   const productVideo = document.getElementById("productVideo");
-  const inquiryButton = document.querySelector(".detail-buttons .btn.primary");
   const ogTitle = `${product.name || "Product Details"} | Guangzhou XiQi Technology`;
   const ogDescription = product.short_desc || product.description || "XiQi OEM and wholesale mobile accessories product details.";
   const images = buildGalleryImages(product);
+  const featuredImage = images[0] || "logo.png";
+  const galleryImages = images.length ? images : [featuredImage];
+  const featureItems = parseFeatures(product.features);
+  const infoRows = [
+    ["Price", product.price || "Contact for price"],
+    ["MOQ", product.moq],
+    ["Material", product.material],
+    ["Packaging", product.packaging],
+    ["Lead Time", product.lead_time]
+  ].filter((row) => row[1]);
 
-  if (mainImage && images.length) {
-    mainImage.src = images[0];
-    updateMeta("property", "og:image", images[0]);
-  }
+  if (!detailPage) return;
 
-  if (gallery && images.length) {
-    gallery.innerHTML = images.map((image) => `
-      <img src="${escapeAttribute(image)}" alt="">
-    `).join("");
-    setupGalleryControls(images);
-  }
+  detailPage.innerHTML = `
+    <div class="detail-left">
+      <div class="detail-main-image">
+        <img src="${escapeAttribute(featuredImage)}" alt="${escapeAttribute(product.name || "XiQi Product")}">
+      </div>
+      <div class="detail-gallery">
+        ${galleryImages.map((image) => `
+          <img src="${escapeAttribute(image)}" alt="${escapeAttribute(product.name || "XiQi Product")}">
+        `).join("")}
+      </div>
+    </div>
+    <div class="detail-right">
+      <p class="detail-tag">${escapeHtml(product.category || "MOBILE ACCESSORIES")}</p>
+      <h1>${escapeHtml(product.name || "XiQi Product")}</h1>
+      <div class="detail-desc">${escapeHtml(product.description || product.short_desc || "OEM / ODM mobile accessories product from Guangzhou XiQi Technology.")}</div>
+      <div class="detail-badges">
+        <span>OEM Support</span>
+        <span>Factory Direct</span>
+        <span>MOQ Support</span>
+      </div>
+      <div class="detail-features">
+        ${featureItems.map((item) => `
+          <div class="feature-item">${escapeHtml(item)}</div>
+        `).join("")}
+      </div>
+      <div class="detail-info">
+        ${infoRows.map(([label, value]) => `
+          <div class="info-row">
+            <span>${escapeHtml(label)}</span>
+            <strong>${escapeHtml(value)}</strong>
+          </div>
+        `).join("")}
+      </div>
+      <div class="detail-buttons">
+        <a href="index.html?product=${encodeURIComponent(product.name || "XiQi Product")}#contact" class="btn primary">
+          Send Inquiry
+        </a>
+        <a href="https://wa.me/8619127919802" class="btn secondary">
+          WhatsApp Quick Contact
+        </a>
+      </div>
+    </div>
+  `;
 
-  if (tag) {
-    tag.textContent = product.category || "MOBILE ACCESSORIES";
-  }
-
-  if (title) {
-    title.textContent = product.name || "XiQi Product";
-  }
-
-  if (desc) {
-    desc.textContent = product.description || product.short_desc || "OEM / ODM mobile accessories product from Guangzhou XiQi Technology.";
-  }
-
-  if (features) {
-    const items = parseFeatures(product.features);
-
-    if (items.length) {
-      features.innerHTML = items.map((item) => `
-        <div class="feature-item">${escapeHtml(item)}</div>
-      `).join("");
-    }
-  }
-
-  if (info) {
-    const rows = [
-      ["Price", product.price || "Contact for price"],
-      ["MOQ", product.moq],
-      ["Material", product.material],
-      ["Packaging", product.packaging],
-      ["Lead Time", product.lead_time]
-    ].filter((row) => row[1]);
-
-    if (rows.length) {
-      info.innerHTML = rows.map(([label, value]) => `
-        <div class="info-row">
-          <span>${escapeHtml(label)}</span>
-          <strong>${escapeHtml(value)}</strong>
-        </div>
-      `).join("");
-    }
-  }
+  setupGalleryControls(galleryImages);
 
   if (videoSection && productVideo && product.video_url) {
     productVideo.src = product.video_url;
@@ -293,18 +305,48 @@ function renderProductDetail(product) {
     videoSection.hidden = true;
   }
 
-  if (inquiryButton) {
-    inquiryButton.href = `index.html?product=${encodeURIComponent(product.name || "XiQi Product")}#contact`;
-  }
-
   if (typeof loadRelatedProducts === "function") {
     loadRelatedProducts(product);
   }
 
+  updateMeta("property", "og:image", featuredImage);
   document.title = ogTitle;
   updateMeta("name", "description", ogDescription);
   updateMeta("property", "og:title", ogTitle);
   updateMeta("property", "og:description", ogDescription);
+}
+
+function renderProductLoadError(container) {
+  container.innerHTML = `
+    <div class="product-empty-state">
+      <h3>Products unavailable</h3>
+      <p>Please try again later.</p>
+    </div>
+  `;
+}
+
+function renderProductDetailMessage(container, title, message) {
+  container.innerHTML = `
+    <div class="product-empty-state">
+      <h3>${escapeHtml(title)}</h3>
+      <p>${escapeHtml(message)}</p>
+    </div>
+  `;
+}
+
+function clearRelatedProducts() {
+  const related = document.getElementById("relatedProducts");
+
+  if (!related) return;
+
+  related.classList.remove("is-loading");
+  related.setAttribute("aria-busy", "false");
+  related.innerHTML = "";
+}
+
+function setLoadingState(element, isLoading) {
+  element.classList.toggle("is-loading", isLoading);
+  element.setAttribute("aria-busy", String(isLoading));
 }
 
 function buildGalleryImages(product) {
