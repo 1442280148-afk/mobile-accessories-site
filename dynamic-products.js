@@ -500,12 +500,12 @@ function buildFallbackProducts() {
   const defaults = Array.isArray(window.XIQI_DEFAULT_PRODUCTS) && window.XIQI_DEFAULT_PRODUCTS.length
     ? window.XIQI_DEFAULT_PRODUCTS
     : [
-      { name: "Phone Case", slug: "phone-case", image_url: "images/phone-case.png" },
-      { name: "Screen Protector", slug: "screen-protector", image_url: "images/screen-protector.png" },
-      { name: "Charger", slug: "charger", image_url: "images/charger.png" },
-      { name: "Power Bank", slug: "power-bank", image_url: "images/power-bank.png" },
-      { name: "Mobile Stand", slug: "mobile-stand", image_url: "images/mobile-stand.png" },
-      { name: "Data Cable", slug: "data-cable", image_url: "images/data-cable.png" }
+      { name: "Phone Case", slug: "phone-case", image_url: "images/phone-case.webp" },
+      { name: "Screen Protector", slug: "screen-protector", image_url: "images/screen-protector.webp" },
+      { name: "Charger", slug: "charger", image_url: "images/charger.webp" },
+      { name: "Power Bank", slug: "power-bank", image_url: "images/power-bank.webp" },
+      { name: "Mobile Stand", slug: "mobile-stand", image_url: "images/mobile-stand.webp" },
+      { name: "Data Cable", slug: "data-cable", image_url: "images/data-cable.webp" }
     ];
 
   return defaults.map((item, index) => ({
@@ -562,12 +562,12 @@ function matchFallbackProduct(id) {
 
 function fallbackImageForIndex(index) {
   const images = [
-    "images/phone-case.png",
-    "images/screen-protector.png",
-    "images/charger.png",
-    "images/power-bank.png",
-    "images/mobile-stand.png",
-    "images/data-cable.png"
+    "images/phone-case.webp",
+    "images/screen-protector.webp",
+    "images/charger.webp",
+    "images/power-bank.webp",
+    "images/mobile-stand.webp",
+    "images/data-cable.webp"
   ];
   return images[Math.abs(index) % images.length] || "images/phone-case.png";
 }

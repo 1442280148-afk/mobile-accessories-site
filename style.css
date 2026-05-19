@@ -2626,3 +2626,16 @@ html[dir="rtl"] .product-search input{
   padding-right:44px;
   padding-left:18px;
 }
+/* WEBP STATIC IMAGE SUPPORT */
+.oem-banner picture,
+.factory-strength picture,
+.production-process picture,
+.cert-banner picture{
+  display:block;
+}
+
+.product-hero{
+  background-image:
+    linear-gradient(120deg,rgba(5,12,28,.86),rgba(15,40,72,.58) 48%,rgba(8,16,32,.82)),
+    image-set(url("images/products-banner.webp") type("image/webp"), url("images/products-banner.jpg") type("image/jpeg"));
+}
