@@ -1,53 +1,32 @@
-function toggleMenu(){
-
-  document.getElementById("nav").classList.toggle("active");
-
+﻿function toggleMenu() {
+  const nav = document.getElementById("nav") || document.querySelector(".nav");
+  if (nav) nav.classList.toggle("active");
 }
 
-/* SCROLL REVEAL */
+(function () {
+  const revealItems = () => {
+    const reveals = document.querySelectorAll(".reveal");
+    const windowHeight = window.innerHeight;
 
-window.addEventListener("scroll", reveal);
+    reveals.forEach((item) => {
+      const revealTop = item.getBoundingClientRect().top;
+      if (revealTop < windowHeight - 100) item.classList.add("active");
+    });
+  };
 
-function reveal(){
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(() => {
+      revealItems();
+      ticking = false;
+    });
+  }, { passive: true });
 
-  let reveals = document.querySelectorAll(".reveal");
-
-  for(let i = 0; i < reveals.length; i++){
-
-    let windowHeight = window.innerHeight;
-
-    let revealTop = reveals[i].getBoundingClientRect().top;
-
-    let revealPoint = 100;
-
-    if(revealTop < windowHeight - revealPoint){
-
-      reveals[i].classList.add("active");
-
-    }
-
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", revealItems);
+  } else {
+    revealItems();
   }
-
-}
-
-reveal();
-const slider = document.querySelector(".category-grid");
-
-let scrollAmount = 0;
-
-function autoSlide() {
-
-  scrollAmount += 1;
-
-  if (scrollAmount >= slider.scrollWidth - slider.clientWidth) {
-    scrollAmount = 0;
-  }
-
-  slider.scrollTo({
-    left: scrollAmount,
-    behavior: "smooth"
-  });
-
-}
-
-setInterval(autoSlide, 30);
+})();

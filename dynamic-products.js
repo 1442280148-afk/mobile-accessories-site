@@ -1,22 +1,23 @@
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
   loadProductGrid();
   loadProductDetail();
 });
 
-const config = window.XIQI_SUPABASE;
-const client = supabase.createClient(config.url, config.key);
+const productConfig = window.XIQI_SUPABASE || window.XIQI_CONFIG || {};
 const defaultFilterCategories = [
   "Phone Cases",
   "Chargers",
   "Screen Protectors",
   "Power Banks",
-  "Earbuds",
+  "Mobile Stands",
   "Data Cables"
 ];
+const fallbackProducts = buildFallbackProducts();
 const productGridState = {
-  products: [],
+  products: fallbackProducts,
   activeCategory: "All Products",
-  searchTerm: ""
+  searchTerm: "",
+  filtersReady: false
 };
 
 async function loadProductGrid() {
@@ -24,19 +25,29 @@ async function loadProductGrid() {
 
   if (!grid) return;
 
-  setLoadingState(grid, true);
+  productGridState.products = fallbackProducts;
+  renderFilterCategories(buildCategoriesFromProducts(fallbackProducts));
+  setupProductFilters();
+  applyInitialCategoryFilter();
+  renderFilteredProducts({ fallback: true });
+  setLoadingState(grid, false);
 
   try {
-    const products = await fetchProducts();
+    const products = await withTimeout(fetchProducts(), 9000, "Products request timed out.");
+    const safeProducts = Array.isArray(products) && products.length ? products : fallbackProducts;
 
-    productGridState.products = products;
+    productGridState.products = ensureProductMinimum(safeProducts);
     await loadFilterCategories();
     setupProductFilters();
     applyInitialCategoryFilter();
-    renderFilteredProducts();
+    renderFilteredProducts({ fallback: !products.length });
   } catch (error) {
-    console.log("Product API unavailable.", error);
-    renderProductLoadError(grid);
+    console.warn("Product API unavailable. Showing fallback products.", error);
+    productGridState.products = fallbackProducts;
+    renderFilterCategories(buildCategoriesFromProducts(fallbackProducts));
+    setupProductFilters();
+    applyInitialCategoryFilter();
+    renderFilteredProducts({ fallback: true });
   } finally {
     setLoadingState(grid, false);
   }
@@ -48,23 +59,24 @@ async function loadFilterCategories() {
   if (!filterButtons) return;
 
   try {
-    const { data, error } = await client
-      .from("categories")
-      .select("*")
-      .eq("status", "published")
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: false });
+    const client = createPublicSupabaseClient();
+    const { data, error } = await withTimeout(
+      client
+        .from("categories")
+        .select("name,slug,sort_order,status,created_at")
+        .eq("status", "published")
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: false }),
+      8000,
+      "Category filters request timed out."
+    );
 
     if (error) throw error;
 
-    renderFilterCategories(data || []);
+    renderFilterCategories(Array.isArray(data) && data.length ? data : buildCategoriesFromProducts(productGridState.products));
   } catch (error) {
-    console.log("Category filters unavailable, using default filters.", error);
-    renderFilterCategories(defaultFilterCategories.map((name, index) => ({
-      name,
-      slug: slugify(name),
-      sort_order: index
-    })));
+    console.warn("Category filters unavailable, using fallback filters.", error);
+    renderFilterCategories(buildCategoriesFromProducts(productGridState.products));
   }
 }
 
@@ -73,7 +85,11 @@ function renderFilterCategories(categories) {
 
   if (!filterButtons) return;
 
-  const visibleCategories = categories
+  const visibleCategories = (Array.isArray(categories) && categories.length ? categories : defaultFilterCategories.map((name, index) => ({
+    name,
+    slug: slugify(name),
+    sort_order: index
+  })))
     .filter((category) => normalizeCategory(category.name || category.slug))
     .sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
 
@@ -93,18 +109,19 @@ function setupProductFilters() {
   const searchInput = document.getElementById("productSearchInput");
 
   filterButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.onclick = () => {
       productGridState.activeCategory = button.dataset.category || "All Products";
       updateActiveFilterButton();
       renderFilteredProducts();
-    });
+    };
   });
 
-  if (searchInput) {
+  if (searchInput && !searchInput.dataset.filterReady) {
     searchInput.addEventListener("input", () => {
       productGridState.searchTerm = searchInput.value.trim().toLowerCase();
       renderFilteredProducts();
     });
+    searchInput.dataset.filterReady = "true";
   }
 }
 
@@ -112,7 +129,10 @@ function applyInitialCategoryFilter() {
   const params = new URLSearchParams(window.location.search);
   const category = params.get("category");
 
-  if (!category) return;
+  if (!category) {
+    updateActiveFilterButton();
+    return;
+  }
 
   const matchedButton = [...document.querySelectorAll(".product-filter-btn")].find((button) => {
     return normalizeCategory(button.dataset.category) === normalizeCategory(category);
@@ -129,14 +149,19 @@ function updateActiveFilterButton() {
   });
 }
 
-function renderFilteredProducts() {
+function renderFilteredProducts(options = {}) {
   const grid = document.querySelector(".product-grid");
 
   if (!grid) return;
 
-  const filteredProducts = productGridState.products.filter((product) => {
+  const sourceProducts = Array.isArray(productGridState.products) && productGridState.products.length
+    ? productGridState.products
+    : fallbackProducts;
+
+  const filteredProducts = sourceProducts.filter((product) => {
     const matchesCategory = productGridState.activeCategory === "All Products" ||
-      normalizeCategory(product.category) === normalizeCategory(productGridState.activeCategory);
+      normalizeCategory(product.category) === normalizeCategory(productGridState.activeCategory) ||
+      normalizeCategory(product.slug) === normalizeCategory(productGridState.activeCategory);
     const matchesSearch = !productGridState.searchTerm || getProductSearchText(product).includes(productGridState.searchTerm);
 
     return matchesCategory && matchesSearch;
@@ -152,15 +177,34 @@ function renderFilteredProducts() {
     return;
   }
 
-  grid.innerHTML = filteredProducts.map((product) => `
-    <div class="product-card">
-      <img src="${escapeAttribute(product.image_url || "")}" alt="${escapeAttribute(product.name || "XiQi Product")}" loading="lazy">
-      <div class="product-info">
-        <h3>${escapeHtml(product.name || "XiQi Product")}</h3>
-        <a href="product-detail.html?id=${encodeURIComponent(product.id)}">View Details</a>
+  grid.innerHTML = filteredProducts.map((product, index) => {
+    const productName = product.name || "XiQi Product";
+    const imageUrl = product.image_url || fallbackImageForIndex(index);
+    const detailHref = product.isFallback
+      ? `product.html?category=${encodeURIComponent(product.slug || product.category || productName)}`
+      : `product-detail.html?id=${encodeURIComponent(product.id)}`;
+
+    return `
+      <div class="product-card">
+        <img src="${escapeAttribute(imageUrl)}" alt="${escapeAttribute(productName)}" width="900" height="620" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='images/phone-case.png';">
+        <div class="product-info">
+          <h3>${escapeHtml(productName)}</h3>
+          <a href="${escapeAttribute(detailHref)}">View Details</a>
+        </div>
       </div>
+    `;
+  }).join("") + renderProductNotice(options.fallback);
+}
+
+function renderProductNotice(isFallback) {
+  if (!isFallback) return "";
+
+  return `
+    <div class="product-empty-state product-load-note" role="status">
+      <h3>Default Products Loaded</h3>
+      <p>Live product data is temporarily unavailable, so default product cards are displayed.</p>
     </div>
-  `).join("");
+  `;
 }
 
 function getProductSearchText(product) {
@@ -185,31 +229,36 @@ async function loadProductDetail() {
 
   if (!detailPage) return;
 
-  setLoadingState(detailPage, true);
-
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
+  const fallbackProduct = fallbackProducts[0];
 
   if (!id) {
-    renderProductDetailMessage(detailPage, "Product not found", "Please choose a product from the products page.");
-    setLoadingState(detailPage, false);
+    renderProductDetail(fallbackProduct, { fallback: true });
     clearRelatedProducts();
+    setLoadingState(detailPage, false);
     return;
   }
 
   try {
-    const { data, error } = await client
-      .from(config.productsTable)
-      .select("*")
-      .eq("id", id)
-      .single();
+    setLoadingState(detailPage, true);
+    const client = createPublicSupabaseClient();
+    const { data, error } = await withTimeout(
+      client
+        .from(productConfig.productsTable || "products")
+        .select("*")
+        .eq("id", id)
+        .single(),
+      9000,
+      "Product detail request timed out."
+    );
 
     if (error) throw error;
 
-    renderProductDetail(data);
+    renderProductDetail(data || fallbackProduct, { fallback: !data });
   } catch (error) {
-    console.log("Supabase product detail unavailable.", error);
-    renderProductDetailMessage(detailPage, "Product not available", "Please return to the products page and choose another item.");
+    console.warn("Supabase product detail unavailable. Showing fallback detail.", error);
+    renderProductDetail(matchFallbackProduct(id) || fallbackProduct, { fallback: true });
     clearRelatedProducts();
   } finally {
     setLoadingState(detailPage, false);
@@ -217,8 +266,9 @@ async function loadProductDetail() {
 }
 
 async function fetchProducts() {
+  const client = createPublicSupabaseClient();
   const { data, error } = await client
-    .from(config.productsTable)
+    .from(productConfig.productsTable || "products")
     .select("*")
     .eq("status", "published")
     .order("sort_order", { ascending: true })
@@ -226,17 +276,18 @@ async function fetchProducts() {
 
   if (error) throw error;
 
-  return data || [];
+  return Array.isArray(data) ? data : [];
 }
 
-function renderProductDetail(product) {
+function renderProductDetail(product, options = {}) {
   const detailPage = document.querySelector(".detail-page");
   const videoSection = document.querySelector(".product-video-section");
   const productVideo = document.getElementById("productVideo");
-  const ogTitle = `${product.name || "Product Details"} | Guangzhou XiQi Technology`;
+  const productName = product?.name || "XiQi Product";
+  const ogTitle = `${productName} | Guangzhou XiQi Technology`;
   const ogDescription = product.short_desc || product.description || "XiQi OEM and wholesale mobile accessories product details.";
   const images = buildGalleryImages(product);
-  const featuredImage = images[0] || "logo.png";
+  const featuredImage = images[0] || "images/logo.png";
   const galleryImages = images.length ? images : [featuredImage];
   const featureItems = parseFeatures(product.features);
   const infoRows = [
@@ -252,17 +303,17 @@ function renderProductDetail(product) {
   detailPage.innerHTML = `
     <div class="detail-left">
       <div class="detail-main-image">
-        <img src="${escapeAttribute(featuredImage)}" alt="${escapeAttribute(product.name || "XiQi Product")}">
+        <img src="${escapeAttribute(featuredImage)}" alt="${escapeAttribute(productName)}" width="900" height="620" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='images/phone-case.png';">
       </div>
       <div class="detail-gallery">
         ${galleryImages.map((image) => `
-          <img src="${escapeAttribute(image)}" alt="${escapeAttribute(product.name || "XiQi Product")}">
+          <img src="${escapeAttribute(image)}" alt="${escapeAttribute(productName)}" width="900" height="620" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='images/phone-case.png';">
         `).join("")}
       </div>
     </div>
     <div class="detail-right">
       <p class="detail-tag">${escapeHtml(product.category || "MOBILE ACCESSORIES")}</p>
-      <h1>${escapeHtml(product.name || "XiQi Product")}</h1>
+      <h1>${escapeHtml(productName)}</h1>
       <div class="detail-desc">${escapeHtml(product.description || product.short_desc || "OEM / ODM mobile accessories product from Guangzhou XiQi Technology.")}</div>
       <div class="detail-badges">
         <span>OEM Support</span>
@@ -270,7 +321,7 @@ function renderProductDetail(product) {
         <span>MOQ Support</span>
       </div>
       <div class="detail-features">
-        ${featureItems.map((item) => `
+        ${(featureItems.length ? featureItems : ["OEM / ODM customization", "Wholesale supply", "Factory direct support"]).map((item) => `
           <div class="feature-item">${escapeHtml(item)}</div>
         `).join("")}
       </div>
@@ -283,13 +334,14 @@ function renderProductDetail(product) {
         `).join("")}
       </div>
       <div class="detail-buttons">
-        <a href="index.html?product=${encodeURIComponent(product.name || "XiQi Product")}#contact" class="btn primary">
+        <a href="index.html?product=${encodeURIComponent(productName)}#contact" class="btn primary">
           Send Inquiry
         </a>
         <a href="https://wa.me/8619127919802" class="btn secondary">
           WhatsApp Quick Contact
         </a>
       </div>
+      ${options.fallback ? `<p class="related-products-message">Live product data is temporarily unavailable. Showing default product information.</p>` : ""}
     </div>
   `;
 
@@ -305,7 +357,7 @@ function renderProductDetail(product) {
     videoSection.hidden = true;
   }
 
-  if (typeof loadRelatedProducts === "function") {
+  if (typeof loadRelatedProducts === "function" && !options.fallback) {
     loadRelatedProducts(product);
   }
 
@@ -314,15 +366,6 @@ function renderProductDetail(product) {
   updateMeta("name", "description", ogDescription);
   updateMeta("property", "og:title", ogTitle);
   updateMeta("property", "og:description", ogDescription);
-}
-
-function renderProductLoadError(container) {
-  container.innerHTML = `
-    <div class="product-empty-state">
-      <h3>Products unavailable</h3>
-      <p>Please try again later.</p>
-    </div>
-  `;
 }
 
 function renderProductDetailMessage(container, title, message) {
@@ -341,7 +384,7 @@ function clearRelatedProducts() {
 
   related.classList.remove("is-loading");
   related.setAttribute("aria-busy", "false");
-  related.innerHTML = "";
+  renderRelatedFallback(related);
 }
 
 function setLoadingState(element, isLoading) {
@@ -350,8 +393,8 @@ function setLoadingState(element, isLoading) {
 }
 
 function buildGalleryImages(product) {
-  const images = [product.image_url]
-    .concat(normalizeGallery(product.gallery))
+  const images = [product?.image_url]
+    .concat(normalizeGallery(product?.gallery))
     .filter(Boolean);
 
   return [...new Set(images)];
@@ -376,7 +419,7 @@ function setupGalleryControls(images) {
   const mainImage = document.querySelector(".detail-main-image img");
   const gallery = document.querySelector(".detail-gallery");
 
-  if (!mainImage || !gallery) return;
+  if (!mainImage || !gallery || !images.length) return;
 
   let activeIndex = 0;
   let touchStartX = 0;
@@ -437,8 +480,108 @@ function normalizeCategory(value) {
     .replace(/s\b/g, "");
 }
 
+function createPublicSupabaseClient() {
+  if (window.XIQI_GET_SUPABASE_CLIENT) return window.XIQI_GET_SUPABASE_CLIENT();
+  if (!window.supabase || !productConfig.url || !productConfig.key) throw new Error("Supabase client unavailable.");
+  window.XIQI_SUPABASE_CLIENT = window.XIQI_SUPABASE_CLIENT || window.supabase.createClient(productConfig.url, productConfig.key);
+  return window.XIQI_SUPABASE_CLIENT;
+}
+
+function withTimeout(promise, timeoutMs, message) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      window.setTimeout(() => reject(new Error(message)), timeoutMs);
+    })
+  ]);
+}
+
+function buildFallbackProducts() {
+  const defaults = Array.isArray(window.XIQI_DEFAULT_PRODUCTS) && window.XIQI_DEFAULT_PRODUCTS.length
+    ? window.XIQI_DEFAULT_PRODUCTS
+    : [
+      { name: "Phone Case", slug: "phone-case", image_url: "images/phone-case.png" },
+      { name: "Screen Protector", slug: "screen-protector", image_url: "images/screen-protector.png" },
+      { name: "Charger", slug: "charger", image_url: "images/charger.png" },
+      { name: "Power Bank", slug: "power-bank", image_url: "images/power-bank.png" },
+      { name: "Mobile Stand", slug: "mobile-stand", image_url: "images/mobile-stand.png" },
+      { name: "Data Cable", slug: "data-cable", image_url: "images/data-cable.png" }
+    ];
+
+  return defaults.map((item, index) => ({
+    id: item.id || item.slug || `fallback-${index}`,
+    name: item.name,
+    slug: item.slug || slugify(item.name),
+    category: item.name,
+    image_url: item.image_url || fallbackImageForIndex(index),
+    short_desc: item.short_desc || item.description || "Premium mobile accessory for OEM and wholesale programs.",
+    description: item.description || item.short_desc || "Premium mobile accessory for OEM and wholesale programs.",
+    status: "published",
+    sort_order: index,
+    isFallback: true
+  }));
+}
+
+function ensureProductMinimum(products, minimum = 6) {
+  const merged = [];
+  const used = new Set();
+
+  [...products, ...fallbackProducts].forEach((product, index) => {
+    const key = String(product.id || product.slug || product.name || index);
+    if (!key || used.has(key)) return;
+    used.add(key);
+    merged.push({
+      ...product,
+      image_url: product.image_url || fallbackImageForIndex(index),
+      category: product.category || product.name || "Mobile Accessories"
+    });
+  });
+
+  return merged.slice(0, Math.max(minimum, products.length));
+}
+
+function buildCategoriesFromProducts(products) {
+  const categories = new Map();
+
+  (Array.isArray(products) ? products : []).forEach((product, index) => {
+    const name = product.category || product.name || defaultFilterCategories[index % defaultFilterCategories.length];
+    const slug = product.slug || slugify(name);
+    if (!name || categories.has(slug)) return;
+    categories.set(slug, { name, slug, sort_order: product.sort_order || index });
+  });
+
+  return Array.from(categories.values());
+}
+
+function matchFallbackProduct(id) {
+  const normalized = normalizeCategory(id);
+  return fallbackProducts.find((product) => {
+    return normalizeCategory(product.id) === normalized || normalizeCategory(product.slug) === normalized || normalizeCategory(product.name) === normalized;
+  });
+}
+
+function fallbackImageForIndex(index) {
+  const images = [
+    "images/phone-case.png",
+    "images/screen-protector.png",
+    "images/charger.png",
+    "images/power-bank.png",
+    "images/mobile-stand.png",
+    "images/data-cable.png"
+  ];
+  return images[Math.abs(index) % images.length] || "images/phone-case.png";
+}
+
+function renderRelatedFallback(container) {
+  if (typeof renderRelatedProducts === "function") {
+    renderRelatedProducts(container, fallbackProducts.slice(0, 4));
+  } else {
+    container.innerHTML = "";
+  }
+}
+
 function escapeHtml(value) {
-  return String(value)
+  return String(value || "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")

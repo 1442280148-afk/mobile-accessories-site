@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,9 +11,19 @@
   <meta name="keywords" content="mobile accessories product details, OEM phone accessories, MOQ, packaging, lead time, wholesale accessories">
   <meta property="og:title" content="Product Details | Guangzhou XiQi Technology">
   <meta property="og:description" content="View XiQi mobile accessories product details, specifications, MOQ, material, packaging and lead time.">
-  <meta property="og:image" content="products-banner.jpg">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="canonical" href="product-detail.html">
+  <meta property="og:type" content="product">
+  <meta property="og:url" content="product-detail.html">
+  <meta property="og:image" content="images/products-banner.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Product Details | Guangzhou XiQi Technology">
+  <meta name="twitter:description" content="View XiQi mobile accessories product details, specifications, MOQ, material, packaging and lead time.">
+  <meta name="twitter:image" content="images/products-banner.jpg">
 
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/logo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -21,6 +31,12 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+  <link rel="alternate" hreflang="en" href="product-detail.html" />
+  <link rel="alternate" hreflang="fr" href="product-detail.html" />
+  <link rel="alternate" hreflang="es" href="product-detail.html" />
+  <link rel="alternate" hreflang="es-MX" href="product-detail.html" />
+  <link rel="alternate" hreflang="ar" href="product-detail.html" />
+  <link rel="alternate" hreflang="x-default" href="product-detail.html" />
 </head>
 
 <body>
@@ -31,7 +47,7 @@
 
     <div class="logo">
 
-      <img src="logo.png" alt="">
+      <img src="images/logo.png" alt="XiQi Logo" width="46" height="46" fetchpriority="high" decoding="async">
 
       <div class="logo-text">
         Guangzhou XiQi Technology
@@ -190,7 +206,7 @@
 
     <a href="https://wa.me/8619127919802" class="whatsapp">
 
-      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" width="34" height="34" loading="lazy" decoding="async">
 
     </a>
 
@@ -198,22 +214,11 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="supabase-config.js"></script>
+  <script src="js/default-products.js"></script>
   <script src="product-detail.js"></script>
   <script src="dynamic-products.js"></script>
   <script src="performance.js"></script>
-  <script>
-    document.addEventListener("click", (event) => {
-      const image = event.target.closest(".detail-gallery img");
-      const mainImage = document.querySelector(".detail-main-image img");
-
-      if (!image || !mainImage) return;
-
-      mainImage.classList.remove("is-swapping");
-      void mainImage.offsetWidth;
-      mainImage.src = image.src;
-      mainImage.classList.add("is-swapping");
-    });
-  </script>
+<script src="language-switcher.js"></script>
 
 </body>
 

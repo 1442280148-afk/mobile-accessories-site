@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+﻿const nodemailer = require("nodemailer");
 
 module.exports = async function handler(req, res) {
   console.log("POST /api/send-inquiry received");
@@ -29,6 +29,9 @@ module.exports = async function handler(req, res) {
       host: process.env.SMTP_HOST || "smtp.163.com",
       port: Number(process.env.SMTP_PORT || 465),
       secure: true,
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 10000,
       auth: {
         user: smtpUser,
         pass: smtpPass
