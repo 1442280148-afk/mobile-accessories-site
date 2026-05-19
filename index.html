@@ -54,8 +54,10 @@
 
   </nav>
 
-  <div class="menu-btn" onclick="toggleMenu()">
-    ☰
+    <div class="menu-btn" onclick="toggleMenu()" aria-label="Open menu" role="button" tabindex="0">
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
 
 </header>
@@ -145,7 +147,7 @@ class="btn secondary">
 
   <div class="about-left">
 
-    <video autoplay muted loop playsinline>
+    <video class="about-video" autoplay muted loop playsinline preload="metadata">
       <source src="factory.mp4" type="video/mp4">
     </video>
 
@@ -263,13 +265,13 @@ class="btn secondary">
         Customization Service
       </h3>
 
-      <ul>
+      <ul class="oem-list">
 
-        <li>✔ Custom Logo</li>
-        <li>✔ Product Packaging</li>
-        <li>✔ Color Customization</li>
-        <li>✔ OEM Production</li>
-        <li>✔ Bulk Wholesale</li>
+        <li>Custom Logo</li>
+        <li>Product Packaging</li>
+        <li>Color Customization</li>
+        <li>OEM Production</li>
+        <li>Bulk Wholesale</li>
 
       </ul>
 
